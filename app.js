@@ -90,11 +90,37 @@ const CHART_COLORS = {
 
 /* DOM REFS */
 
-const chartCanvasContainer = document.getElementById("infographicCanvas");
 const tooltipEl = document.getElementById("chart-tooltip");
 const tooltipWeekEl = document.getElementById("tooltip-week");
 const tooltipValueEl = document.getElementById("tooltip-value");
 const tooltipZoneEl = document.getElementById("tooltip-zone");
+
+/**
+ * Resolve or create the dedicated SVG chart host.
+ * - Preserves the original <canvas id="infographicCanvas"> element.
+ * - Inserts a sibling host directly after the canvas inside the same parent.
+ */
+function getChartHost() {
+  const canvas = document.getElementById("infographicCanvas");
+  if (!canvas) return null;
+
+  // Reuse existing host if already created
+  let host = document.getElementById("liquid-glass-chart-host");
+  if (host) return host;
+
+  // Create a dedicated host directly after the canvas inside the same parent
+  host = document.createElement("div");
+  host.id = "liquid-glass-chart-host";
+  host.className = "liquid-glass-chart-host";
+  host.setAttribute("aria-hidden", "false");
+
+  // Insert right after the canvas without altering any other markup
+  if (canvas.parentNode) {
+    canvas.parentNode.insertBefore(host, canvas.nextSibling);
+  }
+
+  return host;
+}
 
 
 /* STATE */
@@ -798,21 +824,23 @@ function handleMouseLeave() {
 /* INIT CHART */
 
 function mountChart() {
-  if (!chartCanvasContainer) return;
+  const host = getChartHost();
+  if (!host) return;
 
-  // Treat the existing canvas element as a stable SVG host.
-  chartCanvasContainer.classList.add("liquid-glass-chart-host");
+  // Ensure host has correct class
+  host.classList.add("liquid-glass-chart-host");
 
-  // Remove any previously mounted SVG chart without nuking the host.
-  const existingSvg = chartCanvasContainer.querySelector("svg.liquid-glass-chart");
+  // Remove previous SVG if present
+  const existingSvg = host.querySelector("svg.liquid-glass-chart");
   if (existingSvg) {
     existingSvg.remove();
   }
 
-  // Use deterministic chart dimensions; CSS scales the SVG.
+  // Render deterministic SVG
   svgElement = renderChartSvg(CHART_CONFIG.width, CHART_CONFIG.height);
-  chartCanvasContainer.appendChild(svgElement);
+  host.appendChild(svgElement);
 
+  // Bind interactions
   svgElement.addEventListener("mousemove", handleMouseMove);
   svgElement.addEventListener("mouseleave", handleMouseLeave);
 }

@@ -429,17 +429,24 @@ body {
 
 /* Liquid Glass Chart Namespace */
 
+/* Dedicated SVG host inserted after #infographicCanvas.
+ * Positioned to align with the inner glass region while leaving the canvas intact.
+ */
 .liquid-glass-chart-host {
-  position: relative;
+  position: absolute;
+  inset: 9% 4%;
+  border-radius: 22px;
+  pointer-events: none; /* host is transparent; SVG handles interactions */
+  z-index: 4;
 }
 
-/* SVG root */
-
-.liquid-glass-chart {
+/* SVG root inside host */
+.liquid-glass-chart-host .liquid-glass-chart {
   width: 100%;
   height: 100%;
   display: block;
   border-radius: 18px;
+  pointer-events: auto; /* re-enable interaction on SVG for tooltip hit-testing */
 }
 
 /* Background: etched under-glass gradient */
