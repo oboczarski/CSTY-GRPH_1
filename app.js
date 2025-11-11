@@ -162,11 +162,12 @@ function computeLayout() {
   const padCfg = CONFIG.padding;
 
   // Clamp paddings so they remain proportionate on smaller widths/heights
+  // Deterministic, fixed paddings per spec (no proportional / responsive scaling).
   const pad = {
-    top: Math.max(padCfg.top, height * 0.08),
-    right: Math.max(padCfg.right, width * 0.04),
-    bottom: Math.max(padCfg.bottom, height * 0.14),
-    left: Math.max(padCfg.left, width * 0.09)
+    top: padCfg.top,
+    right: padCfg.right,
+    bottom: padCfg.bottom,
+    left: padCfg.left
   };
 
   const chartRect = {
@@ -398,13 +399,32 @@ function drawAxes(rect) {
   ctx.restore();
 }
 
-function traceLine(points) {
+function traceCurvePath(points) {
   if (!points.length) return;
+
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length; i++) {
-    const p = points[i];
-    ctx.lineTo(p.x, p.y);
+
+  if (points.length === 2) {
+    ctx.lineTo(points[1].x, points[1].y);
+    return;
+  }
+
+  // Catmull-Rom-like smoothing with fixed tension for determinism.
+  const tension = 0.18;
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i - 1] || points[i];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[i + 2] || p2;
+
+    const cp1x = p1.x + ((p2.x - p0.x) * tension);
+    const cp1y = p1.y + ((p2.y - p0.y) * tension);
+    const cp2x = p2.x - ((p3.x - p1.x) * tension);
+    const cp2y = p2.y - ((p3.y - p1.y) * tension);
+
+    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
   }
 }
 
@@ -425,7 +445,7 @@ function drawLine(points) {
 
   ctx.strokeStyle = grad;
 
-  traceLine(points);
+  traceCurvePath(points);
   ctx.stroke();
   ctx.restore();
 }
@@ -525,14 +545,15 @@ function drawPoints(points, rect) {
     ctx.stroke();
     ctx.restore();
 
-    // Value label (always above point; padding guarantees no collision)
+    // Value label "WKX Y.Y" above point; deterministic offset
     ctx.save();
     ctx.font = `9px ${CONFIG.fontFamily}`;
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
     ctx.fillStyle = "rgba(230, 238, 255, 0.96)";
     const labelOffset = 8;
-    ctx.fillText(p.value.toFixed(1), p.x, p.y - labelOffset);
+    const valueLabel = `WK${p.weekIndex} ${p.value.toFixed(1)}`;
+    ctx.fillText(valueLabel, p.x, p.y - labelOffset);
     ctx.restore();
   });
 
