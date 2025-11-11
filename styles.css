@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap");
+
+:root {
+  --bg: radial-gradient(circle at 20% 20%, #181f3a 0%, #050612 55%, #010105 100%);
+  --shell: rgba(8, 11, 23, 0.82);
+  --shell-border: rgba(120, 160, 255, 0.26);
+  --text-primary: #f2f5ff;
+  --text-secondary: #8a90ba;
+  --pill-border: rgba(79, 120, 255, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem clamp(1rem, 3vw, 3rem);
+  font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text-primary);
+}
+
+.shell {
+  width: min(1240px, 100%);
+  padding: 1.75rem 1.75rem 2.4rem;
+  border-radius: 28px;
+  background: var(--shell);
+  border: 1px solid var(--shell-border);
+  box-shadow: 0 30px 120px rgba(2, 4, 12, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(24px) saturate(140%);
+  position: relative;
+  overflow: hidden;
+}
+
+.shell::before,
+.shell::after {
+  content: "";
+  position: absolute;
+  inset: auto;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle at center, rgba(135, 255, 248, 0.22), rgba(4, 7, 18, 0));
+  filter: blur(60px);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.shell::before {
+  top: -120px;
+  left: -160px;
+}
+
+.shell::after {
+  bottom: -160px;
+  right: -80px;
+  background: radial-gradient(circle at center, rgba(255, 92, 182, 0.24), rgba(4, 7, 18, 0));
+}
+
+.header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.title {
+  font-size: 0.9rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.player-name {
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-top: 0.25rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(91, 230, 255, 0.15), rgba(93, 55, 255, 0.08));
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 999px;
+}
+
+.legend-dot--low {
+  background: linear-gradient(135deg, #ff4aa6, #ff8bcf);
+}
+.legend-dot--solid {
+  background: linear-gradient(135deg, #8f7bff, #a1b0ff);
+}
+.legend-dot--elite {
+  background: linear-gradient(135deg, #5be6ff, #9efcff);
+}
+.legend-dot--trace {
+  background: linear-gradient(135deg, #5f57ff, #7ddbff);
+}
+
+.stat-pills {
+  margin-top: 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.85rem;
+}
+
+.stat-pill {
+  position: relative;
+  padding: 0.9rem 1.1rem;
+  border-radius: 18px;
+  border: 1px solid var(--pill-border);
+  background: linear-gradient(135deg, rgba(8, 9, 20, 0.9), rgba(33, 38, 68, 0.3));
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.04), 0 12px 30px rgba(2, 5, 15, 0.45);
+  overflow: hidden;
+}
+
+.stat-pill::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 16px;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 60%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.pill-label {
+  font-size: 0.64rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.pill-value {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-top: 0.35rem;
+  color: var(--text-primary);
+}
+
+.pill-sub {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-pill[data-tone="high"] .pill-value {
+  color: #7efbff;
+}
+.stat-pill[data-tone="low"] .pill-value {
+  color: #ff82cb;
+}
+.stat-pill[data-tone="vol"] .pill-value {
+  color: #c5a9ff;
+}
+
+canvas#infographicCanvas {
+  width: 100%;
+  height: 640px;
+  display: block;
+  margin-top: 1.9rem;
+  border-radius: 28px;
+}
+
+@media (max-width: 900px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .legend {
+    justify-content: flex-start;
+  }
+
+  canvas#infographicCanvas {
+    height: 480px;
+  }
+}

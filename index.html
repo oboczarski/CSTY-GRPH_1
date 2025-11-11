@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CONSISTENCY MAP — Justin Herbert</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <div class="header">
+        <div>
+          <div class="title">CONSISTENCY MAP</div>
+          <div class="player-name">Justin Herbert — Weekly Fantasy Output</div>
+        </div>
+        <div class="legend">
+          <span><b class="legend-dot legend-dot--low"></b>0–16: Low Impact</span>
+          <span><b class="legend-dot legend-dot--solid"></b>16–22: Solid</span>
+          <span><b class="legend-dot legend-dot--elite"></b>22–40: Elite</span>
+          <span><b class="legend-dot legend-dot--trace"></b>Performance Trace</span>
+        </div>
+      </div>
+
+      <div class="stat-pills">
+        <div class="stat-pill" data-tone="high">
+          <div class="pill-label">Ceiling Pulse</div>
+          <div class="pill-value" id="stat-high">--</div>
+          <div class="pill-sub" id="stat-high-week">Week —</div>
+        </div>
+        <div class="stat-pill" data-tone="avg">
+          <div class="pill-label">Liquid Mean</div>
+          <div class="pill-value" id="stat-average">--</div>
+          <div class="pill-sub">Season Average</div>
+        </div>
+        <div class="stat-pill" data-tone="low">
+          <div class="pill-label">Floor Echo</div>
+          <div class="pill-value" id="stat-low">--</div>
+          <div class="pill-sub" id="stat-low-week">Week —</div>
+        </div>
+        <div class="stat-pill" data-tone="vol">
+          <div class="pill-label">Volatility Wake</div>
+          <div class="pill-value" id="stat-range">--</div>
+          <div class="pill-sub">High − Low</div>
+        </div>
+      </div>
+
+      <canvas id="infographicCanvas"></canvas>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
