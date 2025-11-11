@@ -117,24 +117,19 @@
           </div>
         </header>
 
-        <!-- Chart container: canvas + tooltip overlay -->
+        <!-- Chart container: reference weekly chart shell -->
         <section class="chart-shell">
-          <div class="chart-glass-layer chart-glass-layer--outer"></div>
-          <div class="chart-glass-layer chart-glass-layer--inner"></div>
-          <div class="chart-caustic chart-caustic--top"></div>
-          <div class="chart-caustic chart-caustic--bottom"></div>
-
-          <canvas id="infographicCanvas" aria-label="Weekly fantasy points liquid glass chart" role="img"></canvas>
-
-          <!-- Tooltip overlay (positioned by JS) -->
-          <div id="chart-tooltip" class="chart-tooltip" hidden>
-            <div class="tooltip-label" id="tooltip-week">Week 1</div>
-            <div class="tooltip-value" id="tooltip-value">27.9 pts</div>
-            <div class="tooltip-zone" id="tooltip-zone">Great Zone</div>
+          <div class="weekly-chart-shell">
+            <small class="weekly-chart-shell__hint">
+              Tap / hover on a week to see exact points and performance zone
+            </small>
+            <div class="weekly-chart-box" id="weekly-chart-box">
+              <div class="weekly-chart-y-axis" id="weekly-chart-y-axis"></div>
+              <div class="weekly-chart-grid" aria-hidden="true"></div>
+              <div class="weekly-chart-line-layer" id="weekly-chart-points"></div>
+              <div class="weekly-chart-x-axis" id="weekly-chart-x-axis"></div>
+            </div>
           </div>
-
-          <!-- Week labels track removed to avoid second x-axis; canvas axis is the single timeline source -->
-          <div class="week-track" aria-hidden="true"></div>
         </section>
       </section>
     </main>

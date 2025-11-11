@@ -359,388 +359,205 @@ body {
   overflow: hidden;
 }
 
-/* Inner glass layers for depth */
+/* Reference weekly chart shell */
 
-.chart-glass-layer {
-  position: absolute;
-  inset: 9% 4%;
-  border-radius: 24px;
-  pointer-events: none;
-}
-
-.chart-glass-layer--outer {
-  border: 1px solid rgba(139, 184, 255, 0.2);
-  box-shadow:
-    inset 0 18px 40px rgba(255, 255, 255, 0.03),
-    inset 0 -18px 65px rgba(0, 0, 0, 0.9);
-}
-
-.chart-glass-layer--inner {
-  inset: 13% 7%;
-  border-radius: 20px;
-  background:
-    radial-gradient(ellipse at top, rgba(124, 245, 255, 0.05), transparent 65%),
-    radial-gradient(ellipse at bottom, rgba(255, 137, 207, 0.04), transparent 60%);
-  box-shadow:
-    inset 0 0 40px rgba(0, 0, 0, 0.95),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.015);
-}
-
-/* Caustic highlights */
-
-.chart-caustic {
-  position: absolute;
-  pointer-events: none;
-  filter: blur(32px);
-  mix-blend-mode: screen;
-  opacity: 0.65;
-}
-
-.chart-caustic--top {
-  left: 10%;
-  right: 10%;
-  top: 9%;
-  height: 38px;
-  background: radial-gradient(ellipse at center, rgba(124, 245, 255, 0.22), transparent 70%);
-}
-
-.chart-caustic--bottom {
-  left: 22%;
-  right: 22%;
-  bottom: 7%;
-  height: 34px;
-  background: radial-gradient(ellipse at center, rgba(255, 137, 207, 0.18), transparent 70%);
-}
-
-/* Chart host becomes SVG-based container */
-
-#infographicCanvas {
+.weekly-chart-shell {
   position: relative;
-  display: block;
-  width: 100%;
-  height: clamp(360px, 56vh, 560px);
   border-radius: 22px;
-  z-index: 3;
-  cursor: default;
-  padding: 0;
-  background: transparent;
-  overflow: visible;
+  padding: 1rem 1.1rem 0.8rem;
+  background: radial-gradient(circle at top, rgba(1, 5, 16, 0.45), rgba(4, 7, 18, 0));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(124, 245, 255, 0.08);
+  backdrop-filter: blur(18px);
+  overflow: hidden;
 }
 
-/* Liquid Glass Chart Namespace */
+.weekly-chart-shell__hint {
+  color: rgba(239, 246, 255, 0.55);
+  font-size: 0.6rem;
+  display: block;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-/* Dedicated SVG host inserted after #infographicCanvas.
- * Positioned to align with the inner glass region while leaving the canvas intact.
- */
-.liquid-glass-chart-host {
+.weekly-chart-box {
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 50vh, 420px);
+  border-radius: 20px;
+  overflow: hidden;
+  background: radial-gradient(circle at 35% 20%, rgba(2, 6, 23, 0.22), rgba(2, 6, 23, 0));
+}
+
+.weekly-chart-y-axis {
   position: absolute;
-  inset: 9% 4%;
-  border-radius: 22px;
-  pointer-events: none; /* host is transparent; SVG handles interactions */
+  top: 0;
+  bottom: 1.35rem;
+  left: 0.35rem;
+  width: 3.2rem;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.78), rgba(2, 6, 23, 0));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.85rem 0 1.5rem;
+  gap: 0.25rem;
+  z-index: 3;
+}
+
+.weekly-chart-y-tick {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.58rem;
+  color: rgba(239, 246, 255, 0.72);
+  border-bottom: 1px solid rgba(239, 246, 255, 0.06);
+  padding-bottom: 0.32rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.weekly-chart-grid {
+  position: absolute;
+  inset: 0 0 0 3.5rem;
+  background-image: linear-gradient(
+    transparent calc(100% - 38px),
+    rgba(255, 255, 255, 0.04) calc(100% - 38px)
+  );
+  background-size: 100% 40px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.weekly-chart-line-layer {
+  position: absolute;
+  inset: 1rem 0.25rem 1.4rem 3.5rem;
   z-index: 4;
 }
 
-/* SVG root inside host */
-.liquid-glass-chart-host .liquid-glass-chart {
-  width: 100%;
-  height: 100%;
-  display: block;
-  border-radius: 18px;
-  pointer-events: auto; /* re-enable interaction on SVG for tooltip hit-testing */
-}
-
-/* Background: etched under-glass gradient */
-
-.liquid-glass-chart .lg-bg {
-  fill: #03060e;
-}
-
-/* Grid lines */
-
-.liquid-glass-chart .lg-grid-line {
-  shape-rendering: geometricPrecision;
-}
-
-.liquid-glass-chart .lg-grid-line--v.lg-grid-line--major,
-.liquid-glass-chart .lg-grid-line--h.lg-grid-line--major {
-  stroke: rgba(164, 207, 255, 0.18);
-  stroke-width: 0.7;
-}
-
-.liquid-glass-chart .lg-grid-line--v.lg-grid-line--minor,
-.liquid-glass-chart .lg-grid-line--h.lg-grid-line--minor {
-  stroke: rgba(110, 152, 210, 0.08);
-  stroke-width: 0.5;
-}
-
-/* Axes */
-
-.liquid-glass-chart .lg-axis {
-  stroke: rgba(170, 215, 255, 0.9);
-  stroke-width: 1.05;
-}
-
-.liquid-glass-chart .lg-axis--x {
-  stroke-linecap: square;
-}
-
-.liquid-glass-chart .lg-axis--y {
-  stroke-linecap: square;
-}
-
-/* Axis ticks */
-
-.liquid-glass-chart .lg-axis-tick {
-  stroke: rgba(162, 202, 255, 0.9);
-  stroke-width: 0.7;
-}
-
-/* Axis labels */
-
-.liquid-glass-chart .lg-axis-label {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  fill: rgba(150, 179, 230, 0.9);
-  font-size: 8px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.liquid-glass-chart .lg-axis-label--y {
-  text-anchor: end;
-  dominant-baseline: middle;
-}
-
-.liquid-glass-chart .lg-axis-label--x {
-  text-anchor: middle;
-  dominant-baseline: hanging;
-}
-
-/* Axis titles */
-
-.liquid-glass-chart .lg-axis-title {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  fill: rgba(177, 209, 255, 0.96);
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.liquid-glass-chart .lg-axis-title--y {
-  text-anchor: middle;
-  dominant-baseline: central;
-}
-
-.liquid-glass-chart .lg-axis-title--x {
-  text-anchor: middle;
-  dominant-baseline: hanging;
-}
-
-/* Chart title and subtitle */
-
-.liquid-glass-chart .lg-chart-title {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  fill: rgba(224, 235, 255, 0.98);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.liquid-glass-chart .lg-chart-subtitle {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  fill: rgba(143, 173, 238, 0.98);
-  font-size: 8px;
-  letter-spacing: 0.08em;
-}
-
-/* Area under curve */
-
-.liquid-glass-chart .lg-area {
-  fill: url(#lg-area-fill);
-  opacity: 1;
-}
-
-/* Main line */
-
-.liquid-glass-chart .lg-line {
-  fill: none;
-}
-
-.liquid-glass-chart .lg-line--halo {
-  stroke: url(#lg-line-halo);
-  stroke-width: 4.2;
-  filter: url(#lg-line-glow);
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-
-.liquid-glass-chart .lg-line--core {
-  stroke: url(#lg-line-core);
-  stroke-width: 2.4;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-
-/* Nodes */
-
-.liquid-glass-chart .lg-node {
-  vector-effect: non-scaling-stroke;
-}
-
-.liquid-glass-chart .lg-node--ring,
-.liquid-glass-chart .lg-node--key-ring {
-  fill: none;
-  stroke-width: 1.2;
-  filter: url(#lg-node-glow);
-}
-
-.liquid-glass-chart .lg-node--core {
-  stroke: none;
-}
-
-.liquid-glass-chart .lg-node--inner {
-  stroke: none;
-}
-
-/* Node vertical guides */
-
-.liquid-glass-chart .lg-node-guide {
-  stroke: rgba(124, 245, 255, 0.06);
-  stroke-width: 0.5;
-  stroke-dasharray: 2.5 4.5;
-}
-
-/* Point labels beneath axis */
-
-.liquid-glass-chart .lg-point-label {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  font-size: 7px;
-  fill: rgba(132, 156, 214, 0.88);
-  text-anchor: middle;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-/* Key point labels */
-
-.liquid-glass-chart .lg-key-label-title {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  font-size: 7px;
-  fill: rgba(250, 221, 184, 0.96);
-  text-anchor: middle;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.liquid-glass-chart .lg-key-label-value {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  font-size: 8px;
-  fill: rgba(252, 236, 207, 0.98);
-  text-anchor: middle;
-}
-
-.liquid-glass-chart .lg-key-label-desc {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  font-size: 6.3px;
-  fill: rgba(177, 204, 255, 0.86);
-  text-anchor: middle;
-  letter-spacing: 0.04em;
-}
-
-/* Tooltip overrides to align with new chart aesthetic */
-
-.chart-tooltip {
-  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  background: rgba(5, 10, 20, 0.98);
-  border-color: rgba(146, 199, 255, 0.9);
-  color: #e6f2ff;
-}
-
-.chart-tooltip::before {
-  border-color: rgba(5, 10, 20, 0.98) transparent transparent transparent;
-}
-
-.tooltip-label {
-  font-size: 0.55rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(136, 165, 220, 0.96);
-}
-
-.tooltip-value {
-  font-size: 0.95rem;
-  color: #7cf5ff;
-}
-
-.tooltip-zone {
-  font-size: 0.6rem;
-  color: rgba(180, 208, 255, 0.96);
-}
-
-/* Week track neutralized to avoid a perceived second x-axis.
- * Retained only as a structural hook; fully hidden visually.
- */
-.week-track {
-  display: none;
-}
-
-/* Tooltip */
-
-.chart-tooltip {
+.weekly-chart-x-axis {
   position: absolute;
-  min-width: 136px;
-  padding: 0.5rem 0.7rem 0.55rem;
-  border-radius: 14px;
-  background: var(--tooltip-bg);
-  border: 1px solid var(--tooltip-border);
-  box-shadow:
-    0 16px 50px rgba(0, 0, 0, 0.95),
-    inset 0 0 14px rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(18px) saturate(150%);
-  transform: translate(-50%, -115%);
-  z-index: 10;
+  bottom: 0;
+  left: 3.5rem;
+  right: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0;
+  font-size: 0.58rem;
+  color: rgba(239, 246, 255, 0.82);
+  background: rgba(2, 6, 23, 0.85);
+  border-top: 1px solid rgba(239, 246, 255, 0.06);
+  border-radius: 0 0 18px 18px;
+  backdrop-filter: blur(10px);
+  padding: 0.35rem 0 0.4rem;
+  letter-spacing: 0.04em;
+  z-index: 5;
+}
+
+.weekly-chart-x-axis span {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.weekly-zone {
+  position: absolute;
+  left: 3.5rem;
+  right: 0.35rem;
+  border-bottom: 1px solid rgba(239, 246, 255, 0.05);
+  z-index: 0;
+}
+
+.weekly-zone-label {
+  position: absolute;
+  top: 4px;
+  right: 0.45rem;
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  padding: 0.12rem 0.4rem 0.16rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(1, 4, 11, 0.78);
+  color: rgba(239, 246, 255, 0.62);
+  backdrop-filter: blur(12px);
+}
+
+.weekly-zone--bad {
+  background: linear-gradient(180deg, rgba(255, 66, 122, 0.12), rgba(5, 7, 15, 0));
+}
+
+.weekly-zone--good {
+  background: linear-gradient(180deg, rgba(0, 195, 255, 0.09), rgba(5, 7, 15, 0));
+}
+
+.weekly-zone--great {
+  background: linear-gradient(180deg, rgba(199, 97, 255, 0.1), rgba(5, 7, 15, 0));
+}
+
+.weekly-point {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 2.5px solid rgba(2, 6, 23, 0.98);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.weekly-point-label {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(1, 6, 14, 0.82);
+  border: 1px solid rgba(212, 212, 216, 0.14);
+  border-radius: 0.55rem;
+  padding: 0.22rem 0.32rem 0.12rem;
+  text-align: center;
+  min-width: 66px;
+  backdrop-filter: blur(12px);
   pointer-events: none;
 }
 
-.chart-tooltip::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -7px;
-  transform: translateX(-50%);
-  border-width: 7px 7px 0 7px;
-  border-style: solid;
-  border-color: rgba(10, 14, 30, 0.96) transparent transparent transparent;
-  filter: drop-shadow(0 -1px 3px rgba(0, 0, 0, 0.9));
+.weekly-point-label span {
+  display: block;
+  line-height: 1.05;
 }
 
-.tooltip-label {
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
+.weekly-point-label__week {
+  font-size: 0.48rem;
+  color: rgba(239, 246, 255, 0.45);
+  letter-spacing: 0.12em;
+}
+
+.weekly-point-label__value {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #f8faff;
+}
+
+.weekly-point-label__bucket {
+  font-size: 0.48rem;
   text-transform: uppercase;
-  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  margin-top: 0.1rem;
 }
 
-.tooltip-value {
-  margin-top: 0.08rem;
-  font-size: 0.98rem;
-  font-weight: 500;
-  color: var(--accent-cyan);
+.weekly-curve-layer {
+  pointer-events: none;
+  filter: drop-shadow(0 0 12px rgba(207, 120, 255, 0.45));
 }
 
-.tooltip-zone {
-  margin-top: 0.02rem;
-  font-size: 0.64rem;
-  color: var(--accent-violet);
+@media (max-width: 720px) {
+  .weekly-chart-box {
+    height: 320px;
+  }
+
+  .weekly-chart-x-axis span {
+    font-size: 0.56rem;
+  }
 }
 
 /* RESPONSIVE */
@@ -754,49 +571,18 @@ body {
     padding: 1.4rem 1.4rem 1.8rem;
     border-radius: 26px;
   }
-
-  .shell-header {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 2fr);
-    grid-template-rows: auto auto;
-    gap: 1.2rem;
-  }
-
-  .shell-header-right {
-    grid-column: span 2;
-    justify-self: flex-start;
-  }
-
-  .shell-meta {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 2fr);
-    grid-auto-rows: auto;
-    row-gap: 0.8rem;
-  }
-
-  .meta-legend {
-    justify-content: flex-start;
-  }
 }
 
 @media (max-width: 720px) {
-  .shell-header {
-    grid-template-columns: 1fr;
+  body {
+    padding: 1.4rem 1rem;
   }
 
-  .shell-header-center {
-    justify-self: flex-start;
-    margin-left: -0.1rem;
+  .glass-shell {
+    padding: 1.1rem 1.1rem 1.4rem;
   }
 
-  .shell-header-right {
-    justify-self: flex-start;
+  .weekly-chart-shell {
+    padding: 0.85rem 0.85rem 0.6rem;
   }
-
-  .shell-meta {
-    grid-template-columns: 1fr;
-  }
-
-  #infographicCanvas {
-    height: clamp(320px, 50vh, 440px);
-  }
-
 }
