@@ -424,21 +424,11 @@ body {
   cursor: default;
 }
 
-/* Week track: subtle static guide, not interactive */
-
+/* Week track neutralized to avoid a perceived second x-axis.
+ * Retained only as a structural hook; fully hidden visually.
+ */
 .week-track {
-  position: absolute;
-  bottom: 0.35rem;
-  left: 1.6rem;
-  right: 1.6rem;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.55rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(158, 173, 255, 0.36);
-  pointer-events: none;
-  z-index: 2;
+  display: none;
 }
 
 /* Tooltip */
@@ -547,8 +537,4 @@ body {
     height: clamp(320px, 50vh, 440px);
   }
 
-  .week-track {
-    left: 1.2rem;
-    right: 1.2rem;
-  }
 }

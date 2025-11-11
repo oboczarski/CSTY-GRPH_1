@@ -13,10 +13,11 @@ const CONFIG = {
   minVal: 0,
   maxVal: 40,
   paddingRatio: {
-    top: 0.16,   // headroom for title / top ticks
-    right: 0.10,
-    bottom: 0.24, // space for x-axis labels + axis label
-    left: 0.14    // space for y-axis labels + axis label
+    // Tighter framing so the hero line/points sit more prominently in the chamber
+    top: 0.10,
+    right: 0.07,
+    bottom: 0.16,
+    left: 0.12
   },
   hitRadius: 18,
   fontFamily: `"Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`,
@@ -562,7 +563,7 @@ function drawCaustics(points, rect) {
 function drawPoints(points, rect) {
   ctx.save();
 
-  // Identify max and min for special styling
+  // Identify max and min for subtle emphasis
   const maxPoint = points.reduce((m, p) => (p.value > m.value ? p : m), points[0]);
   const minPoint = points.reduce((m, p) => (p.value < m.value ? p : m), points[0]);
 
@@ -576,59 +577,77 @@ function drawPoints(points, rect) {
     else if (zone === ZONES.GOOD) baseColor = COLORS.zoneGood.accent;
     else baseColor = COLORS.zoneGreat.accent;
 
-    let coreRadius = 5.2;
-    let glowRadius = 11;
-    let strokeWidth = 1.2;
+    // Base visual: compact, disciplined nodes
+    let coreRadius = 4.2;
+    let strokeWidth = 1;
     let strokeColor = "rgba(255,255,255,0.9)";
+    let glowOuterRadius = 7;
+    let glowAlpha = 0.18;
 
     if (isMax) {
-      coreRadius = 6.4;
-      glowRadius = 14;
-      strokeWidth = 1.6;
+      coreRadius = 6;               // Hero point
+      strokeWidth = 1.4;
       strokeColor = "rgba(255,196,160,0.98)";
+      glowOuterRadius = 10;
+      glowAlpha = 0.32;
     } else if (isMin) {
-      coreRadius = 5.4;
-      glowRadius = 12;
-      strokeWidth = 1.3;
-      strokeColor = "rgba(162, 188, 255, 0.98)";
+      coreRadius = 5;               // Slightly called out, cooler
+      strokeWidth = 1.2;
+      strokeColor = "rgba(162,188,255,0.98)";
+      glowOuterRadius = 8;
+      glowAlpha = 0.24;
     }
 
-    // Soft halo
+    // Very subtle outer glow (no large neon halos)
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-    const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowRadius * 2.2);
-    halo.addColorStop(0, isMax ? "rgba(255,196,160,0.45)" : isMin ? "rgba(136,176,255,0.4)" : "rgba(124,245,255,0.38)");
-    halo.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = halo;
+    const glow = ctx.createRadialGradient(
+      p.x,
+      p.y,
+      0,
+      p.x,
+      p.y,
+      glowOuterRadius
+    );
+    glow.addColorStop(0, `rgba(124,245,255,${isMax ? glowAlpha : glowAlpha * 0.9})`);
+    glow.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, glowRadius * 2.2, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, glowOuterRadius, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
-    // Core node
-    const inner = ctx.createRadialGradient(p.x, p.y - 1.5, 0, p.x, p.y + 1.5, coreRadius * 2);
-    inner.addColorStop(0, "rgba(4,6,14,1)");
+    // Core node: zone-tinted solid with soft inner highlight
+    const inner = ctx.createRadialGradient(
+      p.x,
+      p.y - 1,
+      0,
+      p.x,
+      p.y + 1,
+      coreRadius * 1.4
+    );
+    inner.addColorStop(0, "rgba(6,9,18,1)");
     inner.addColorStop(0.55, baseColor);
-    inner.addColorStop(1, "rgba(255,255,255,0.96)");
+    inner.addColorStop(1, "rgba(240,244,255,0.96)");
     ctx.fillStyle = inner;
     ctx.beginPath();
     ctx.arc(p.x, p.y, coreRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Rim
+    // Thin rim for precision
     ctx.strokeStyle = strokeColor;
     ctx.lineWidth = strokeWidth;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, coreRadius + 0.7, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, coreRadius + 0.4, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Vertical hairline down to x-axis for positional clarity
+    // Optional: very soft guide down to x-axis; retained but subdued
     ctx.save();
-    ctx.setLineDash([3, 4]);
-    ctx.strokeStyle = "rgba(124,245,255,0.16)";
-    ctx.lineWidth = 0.6;
+    ctx.setLineDash([2, 5]);
+    ctx.strokeStyle = "rgba(124,245,255,0.08)";
+    ctx.lineWidth = 0.4;
     ctx.beginPath();
-    ctx.moveTo(p.x, p.y + coreRadius + 1.5);
+    ctx.moveTo(p.x, p.y + coreRadius + 1);
     ctx.lineTo(p.x, rect.y + rect.h);
     ctx.stroke();
     ctx.restore();
