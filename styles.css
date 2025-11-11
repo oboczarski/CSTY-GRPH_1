@@ -445,14 +445,7 @@ body {
 /* Background: etched under-glass gradient */
 
 .liquid-glass-chart .lg-bg {
-  fill: url("#lg-chart-bg-fallback");
-  fill: radial-gradient(
-      circle at 0% 0%,
-      rgba(124, 245, 255, 0.04),
-      transparent 70%
-    )
-    fixed;
-  fill: rgba(3, 6, 14, 1);
+  fill: #03060e;
 }
 
 /* Grid lines */

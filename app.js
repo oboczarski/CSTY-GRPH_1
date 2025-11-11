@@ -800,16 +800,17 @@ function handleMouseLeave() {
 function mountChart() {
   if (!chartCanvasContainer) return;
 
-  // Ensure container is treated as a generic chart host, not a 2D canvas.
-  chartCanvasContainer.innerHTML = "";
+  // Treat the existing canvas element as a stable SVG host.
   chartCanvasContainer.classList.add("liquid-glass-chart-host");
 
-  const containerRect = chartCanvasContainer.getBoundingClientRect();
-  const containerWidth = containerRect.width || CHART_CONFIG.width;
-  const containerHeight =
-    containerRect.height || CHART_CONFIG.height;
+  // Remove any previously mounted SVG chart without nuking the host.
+  const existingSvg = chartCanvasContainer.querySelector("svg.liquid-glass-chart");
+  if (existingSvg) {
+    existingSvg.remove();
+  }
 
-  svgElement = renderChartSvg(containerWidth, containerHeight);
+  // Use deterministic chart dimensions; CSS scales the SVG.
+  svgElement = renderChartSvg(CHART_CONFIG.width, CHART_CONFIG.height);
   chartCanvasContainer.appendChild(svgElement);
 
   svgElement.addEventListener("mousemove", handleMouseMove);
