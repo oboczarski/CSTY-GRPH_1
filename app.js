@@ -12,15 +12,16 @@
 const CONFIG = {
   minVal: 0,
   maxVal: 40,
-  targetAverage: 22.0,
   paddingRatio: {
-    top: 0.16,
+    top: 0.16,   // headroom for title / top ticks
     right: 0.10,
-    bottom: 0.22,
-    left: 0.12
+    bottom: 0.24, // space for x-axis labels + axis label
+    left: 0.14    // space for y-axis labels + axis label
   },
   hitRadius: 18,
-  fontFamily: `"Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+  fontFamily: `"Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`,
+  yTicks: [0, 8, 16, 22, 30, 40],
+  ceilingRankMax: 20 // for inverse scale mapping (1 best -> 1.0, 20 -> 0)
 };
 
 const DATA = {
@@ -49,7 +50,7 @@ const COLORS = {
   backgroundBottom: "#050714",
   gridLine: "rgba(255,255,255,0.06)",
   weekGrid: "rgba(120, 150, 255, 0.08)",
-  axis: "rgba(146, 180, 255, 0.5)",
+  axis: "rgba(146, 180, 255, 0.6)",
   textSoft: "rgba(144,150,192,0.9)",
   zoneBad: {
     fillFrom: "rgba(15, 26, 56, 0.78)",
@@ -83,12 +84,6 @@ const tooltipWeekEl = document.getElementById("tooltip-week");
 const tooltipValueEl = document.getElementById("tooltip-value");
 const tooltipZoneEl = document.getElementById("tooltip-zone");
 
-const peakPointsEl = document.getElementById("peak-points");
-const peakWeekEl = document.getElementById("peak-week");
-const floorPointsEl = document.getElementById("floor-points");
-const floorWeekEl = document.getElementById("floor-week");
-const statRangeEl = document.getElementById("stat-range");
-const statProfileEl = document.getElementById("stat-profile");
 
 /* STATE */
 
@@ -117,56 +112,30 @@ function formatPoints(value) {
   return `${value.toFixed(1)} pts`;
 }
 
-/* METRICS / HEADER HYDRATION */
+/* PROGRESS CIRCLES HYDRATION (static metrics expressed via CSS vars if needed)
+ * Metrics:
+ * - Consistency Rate (CSTY%): 66.7% of 100
+ * - Ceiling Pos Rank (CL_RK): 4 where 1 is best; use inverse mapping on 1-20 scale
+ */
 
-function computeMetrics() {
-  const values = DATA.weeks.map((w) => w.value);
-  const sorted = [...DATA.weeks].sort((a, b) => b.value - a.value);
-  const peak = sorted[0];
-  const floor = sorted[sorted.length - 1];
-  const range = peak.value - floor.value;
-
-  // For "Consistency Profile", derive a simple zone-weighted label
-  let badCount = 0;
-  let goodCount = 0;
-  let greatCount = 0;
-  DATA.weeks.forEach((w) => {
-    const z = zoneForValue(w.value);
-    if (z === ZONES.BAD) badCount++;
-    else if (z === ZONES.GOOD) goodCount++;
-    else greatCount++;
-  });
-
-  let profile;
-  if (greatCount >= badCount && greatCount >= goodCount) {
-    profile = "Aggressive Great-zone leaning";
-  } else if (goodCount >= greatCount && goodCount >= badCount) {
-    profile = "Stable Good-zone centric";
-  } else if (badCount > greatCount) {
-    profile = "Volatile with low dips";
-  } else {
-    profile = "Mixed signature";
+function hydrateProgressCircles() {
+  const consistencyCircle = document.querySelector(
+    ".progress-circle--consistency .progress-ring-fill"
+  );
+  if (consistencyCircle) {
+    // 66.7% expressed directly via inline style in HTML; keep here for clarity / future hooks.
+    consistencyCircle.style.setProperty("--progress", (66.7 / 100).toFixed(3));
   }
 
-  return { peak, floor, range, profile };
-}
-
-function hydrateHeader() {
-  const { peak, floor, range, profile } = computeMetrics();
-
-  if (peakPointsEl && peakWeekEl) {
-    peakPointsEl.textContent = formatPoints(peak.value);
-    peakWeekEl.textContent = `WK${peak.weekIndex}`;
-  }
-  if (floorPointsEl && floorWeekEl) {
-    floorPointsEl.textContent = formatPoints(floor.value);
-    floorWeekEl.textContent = `WK${floor.weekIndex}`;
-  }
-  if (statRangeEl) {
-    statRangeEl.textContent = formatPoints(range);
-  }
-  if (statProfileEl) {
-    statProfileEl.textContent = profile;
+  const ceilingCircle = document.querySelector(
+    ".progress-circle--ceiling .progress-ring-fill--ceiling"
+  );
+  if (ceilingCircle) {
+    const rank = 4;
+    const maxRank = CONFIG.ceilingRankMax;
+    const normalized = clamp((maxRank - rank) / (maxRank - 1), 0, 1);
+    // Inline style already set close; enforce canonical mapping so arc = closeness to #1.
+    ceilingCircle.style.setProperty("--progress", normalized.toFixed(3));
   }
 }
 
@@ -331,24 +300,25 @@ function drawZoneBands(rect) {
 
 function drawGrid(rect) {
   ctx.save();
+
+  // Horizontal grid lines at major structure (aligned with yTicks)
+  ctx.setLineDash([4, 8]);
   ctx.strokeStyle = COLORS.gridLine;
   ctx.lineWidth = 1;
-
-  // Horizontal grid lines every 10 pts
-  ctx.setLineDash([4, 8]);
-  for (let v = 0; v <= CONFIG.maxVal; v += 10) {
+  CONFIG.yTicks.forEach((v) => {
     const y = mapValueToY(v, rect);
     ctx.beginPath();
     ctx.moveTo(rect.x, y);
     ctx.lineTo(rect.x + rect.w, y);
     ctx.stroke();
-  }
+  });
 
-  // Vertical soft columns for each week
+  // Vertical columns for each week
   ctx.setLineDash([]);
   ctx.strokeStyle = COLORS.weekGrid;
+  const step = rect.w / (DATA.weeks.length - 1);
   DATA.weeks.forEach((_, i) => {
-    const x = rect.x + (rect.w / (DATA.weeks.length - 1)) * i;
+    const x = rect.x + step * i;
     ctx.beginPath();
     ctx.moveTo(x, rect.y);
     ctx.lineTo(x, rect.y + rect.h);
@@ -358,32 +328,98 @@ function drawGrid(rect) {
   ctx.restore();
 }
 
+/**
+ * Explicit axes:
+ *  - X-axis: W1–W9, labeled, with central label "Week"
+ *  - Y-axis: ticks at [0, 8, 16, 22, 30, 40], label "Fantasy Points"
+ */
 function drawAxes(rect) {
   ctx.save();
+
+  // Base axes
   ctx.strokeStyle = COLORS.axis;
-  ctx.lineWidth = 1.3;
+  ctx.lineWidth = 1.2;
 
   // Y-axis
   ctx.beginPath();
-  ctx.moveTo(rect.x, rect.y - 8);
-  ctx.lineTo(rect.x, rect.y + rect.h + 4);
+  ctx.moveTo(rect.x, rect.y);
+  ctx.lineTo(rect.x, rect.y + rect.h);
   ctx.stroke();
 
   // X-axis
   ctx.beginPath();
-  ctx.moveTo(rect.x - 4, rect.y + rect.h);
-  ctx.lineTo(rect.x + rect.w + 4, rect.y + rect.h);
+  ctx.moveTo(rect.x, rect.y + rect.h);
+  ctx.lineTo(rect.x + rect.w, rect.y + rect.h);
   ctx.stroke();
 
-  // Y-axis labels
+  // Y-axis ticks and labels
   ctx.fillStyle = COLORS.textSoft;
   ctx.font = `10px ${CONFIG.fontFamily}`;
   ctx.textAlign = "right";
   ctx.textBaseline = "middle";
-  for (let v = 0; v <= CONFIG.maxVal; v += 10) {
+
+  CONFIG.yTicks.forEach((v) => {
     const y = mapValueToY(v, rect);
-    ctx.fillText(`${v}`, rect.x - 10, y);
-  }
+
+    // Tick
+    ctx.beginPath();
+    ctx.moveTo(rect.x - 4, y);
+    ctx.lineTo(rect.x, y);
+    ctx.stroke();
+
+    // Label
+    ctx.fillText(String(v), rect.x - 8, y);
+  });
+
+  // Y-axis label "Fantasy Points"
+  ctx.save();
+  ctx.translate(rect.x - 26, rect.y + rect.h / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.font = `9px ${CONFIG.fontFamily}`;
+  ctx.fillStyle = "rgba(156, 177, 245, 0.9)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Fantasy Points", 0, 0);
+  ctx.restore();
+
+  // X-axis week labels
+  const step = rect.w / (DATA.weeks.length - 1);
+  ctx.font = `9px ${CONFIG.fontFamily}`;
+  ctx.fillStyle = "rgba(156, 177, 245, 0.9)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+
+  DATA.weeks.forEach((w, i) => {
+    const x = rect.x + step * i;
+    const y = rect.y + rect.h + 6;
+
+    // Tick
+    ctx.beginPath();
+    ctx.moveTo(x, rect.y + rect.h);
+    ctx.lineTo(x, rect.y + rect.h + 4);
+    ctx.stroke();
+
+    // Label
+    ctx.fillText(`W${w.weekIndex}`, x, y + 2);
+  });
+
+  // X-axis label "Week"
+  ctx.font = `9px ${CONFIG.fontFamily}`;
+  ctx.fillStyle = "rgba(132, 163, 242, 0.96)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText("Week", rect.x + rect.w / 2, rect.y + rect.h + 20);
+
+  // Chart title & subtitle inside chart area (top-left)
+  ctx.font = `11px ${CONFIG.fontFamily}`;
+  ctx.fillStyle = "rgba(214, 224, 255, 0.98)";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillText("Weekly Fantasy Points (Weeks 1–9)", rect.x + 4, rect.y - 14);
+
+  ctx.font = `9px ${CONFIG.fontFamily}`;
+  ctx.fillStyle = "rgba(148, 176, 255, 0.94)";
+  ctx.fillText("Liquid Glass Consistency Map", rect.x + 4, rect.y - 3);
 
   ctx.restore();
 }
@@ -526,66 +562,73 @@ function drawCaustics(points, rect) {
 function drawPoints(points, rect) {
   ctx.save();
 
+  // Identify max and min for special styling
+  const maxPoint = points.reduce((m, p) => (p.value > m.value ? p : m), points[0]);
+  const minPoint = points.reduce((m, p) => (p.value < m.value ? p : m), points[0]);
+
   points.forEach((p) => {
+    const isMax = p === maxPoint;
+    const isMin = p === minPoint;
+
     const zone = p.zone;
-    let colorCore;
-    let colorGlow;
-    if (zone === ZONES.BAD) {
-      colorCore = COLORS.zoneBad.accent;
-      colorGlow = "rgba(255,111,182,0.9)";
-    } else if (zone === ZONES.GOOD) {
-      colorCore = COLORS.zoneGood.accent;
-      colorGlow = "rgba(185,172,255,0.9)";
-    } else {
-      colorCore = COLORS.zoneGreat.accent;
-      colorGlow = "rgba(124,245,255,0.98)";
+    let baseColor;
+    if (zone === ZONES.BAD) baseColor = COLORS.zoneBad.accent;
+    else if (zone === ZONES.GOOD) baseColor = COLORS.zoneGood.accent;
+    else baseColor = COLORS.zoneGreat.accent;
+
+    let coreRadius = 5.2;
+    let glowRadius = 11;
+    let strokeWidth = 1.2;
+    let strokeColor = "rgba(255,255,255,0.9)";
+
+    if (isMax) {
+      coreRadius = 6.4;
+      glowRadius = 14;
+      strokeWidth = 1.6;
+      strokeColor = "rgba(255,196,160,0.98)";
+    } else if (isMin) {
+      coreRadius = 5.4;
+      glowRadius = 12;
+      strokeWidth = 1.3;
+      strokeColor = "rgba(162, 188, 255, 0.98)";
     }
 
-    // Outer glow
+    // Soft halo
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-    const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 26);
-    glow.addColorStop(0, colorGlow);
-    glow.addColorStop(0.5, "rgba(10,12,25,0.6)");
-    glow.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = glow;
+    const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowRadius * 2.2);
+    halo.addColorStop(0, isMax ? "rgba(255,196,160,0.45)" : isMin ? "rgba(136,176,255,0.4)" : "rgba(124,245,255,0.38)");
+    halo.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = halo;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 26, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, glowRadius * 2.2, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
-    // Core orb (liquid glass)
-    const inner = ctx.createRadialGradient(p.x, p.y - 3, 0, p.x, p.y, 11);
-    inner.addColorStop(0, "rgba(6,8,18,1)");
-    inner.addColorStop(0.55, colorCore);
+    // Core node
+    const inner = ctx.createRadialGradient(p.x, p.y - 1.5, 0, p.x, p.y + 1.5, coreRadius * 2);
+    inner.addColorStop(0, "rgba(4,6,14,1)");
+    inner.addColorStop(0.55, baseColor);
     inner.addColorStop(1, "rgba(255,255,255,0.96)");
     ctx.fillStyle = inner;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 9.5, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, coreRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Outer rim
-    ctx.strokeStyle = "rgba(255,255,255,0.82)";
-    ctx.lineWidth = 1.2;
+    // Rim
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = strokeWidth;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 9.5, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, coreRadius + 0.7, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Week label - inside or just under orb
-    ctx.fillStyle = "rgba(5,8,18,0.95)";
-    ctx.font = `7px ${CONFIG.fontFamily}`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    const label = `W${p.weekIndex}`;
-    ctx.fillText(label, p.x, p.y + 0.2);
-
-    // Vertical subtle anchor to x-axis
+    // Vertical hairline down to x-axis for positional clarity
     ctx.save();
     ctx.setLineDash([3, 4]);
-    ctx.strokeStyle = "rgba(124,245,255,0.14)";
-    ctx.lineWidth = 0.7;
+    ctx.strokeStyle = "rgba(124,245,255,0.16)";
+    ctx.lineWidth = 0.6;
     ctx.beginPath();
-    ctx.moveTo(p.x, p.y + 11);
+    ctx.moveTo(p.x, p.y + coreRadius + 1.5);
     ctx.lineTo(p.x, rect.y + rect.h);
     ctx.stroke();
     ctx.restore();
@@ -602,6 +645,7 @@ function render() {
   drawBackdropGradient();
   drawZoneBands(layout.rect);
   drawGrid(layout.rect);
+  drawAxes(layout.rect);
   drawSplineArea(layout.points, layout.rect);
   drawSplineLine(layout.points);
   drawMicroBubbles(layout.microBubbles);
@@ -705,7 +749,7 @@ function handleMouseLeave() {
 /* INIT */
 
 function init() {
-  hydrateHeader();
+  hydrateProgressCircles();
   resizeCanvas();
 
   window.addEventListener("resize", resizeCanvas);
