@@ -10,19 +10,31 @@
  */
 
 const CONFIG = {
+  // Data domain
   minVal: 0,
   maxVal: 40,
-  paddingRatio: {
-    // Tighter framing so the hero line/points sit more prominently in the chamber
-    top: 0.10,
-    right: 0.07,
-    bottom: 0.16,
-    left: 0.12
+
+  // Fixed paddings in px (applied relative via clamped logic in computeLayout)
+  padding: {
+    top: 40,     // space for chart title + subtitle
+    right: 32,   // prevent last point / labels clipping
+    bottom: 46,  // x-axis ticks + labels + "Week"
+    left: 54     // y-axis ticks + vertical label
   },
-  hitRadius: 18,
+
+  // Hit radius in px for hover detection on logical canvas space
+  hitRadius: 16,
+
   fontFamily: `"Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`,
+
+  // Y-axis tick values
   yTicks: [0, 8, 16, 22, 30, 40],
-  ceilingRankMax: 20 // for inverse scale mapping (1 best -> 1.0, 20 -> 0)
+
+  // Tooltip sizing fallback used for clamping (matches CSS min-width)
+  tooltipWidthFallback: 136,
+
+  // Max rank for ceiling circle mapping (HUD-only)
+  ceilingRankMax: 20
 };
 
 const DATA = {
@@ -88,7 +100,7 @@ const tooltipZoneEl = document.getElementById("tooltip-zone");
 
 /* STATE */
 
-let layout = null; // { rect, points, microBubbles }
+let layout = null; // { rect, points }
 let deviceRatio = window.devicePixelRatio || 1;
 
 /* UTILITIES */
@@ -144,14 +156,17 @@ function hydrateProgressCircles() {
 
 function computeLayout() {
   const rect = canvas.getBoundingClientRect();
-  const width = rect.width;
-  const height = rect.height;
+  const width = Math.max(320, rect.width || canvas.clientWidth || 320);
+  const height = Math.max(260, rect.height || canvas.clientHeight || 260);
 
+  const padCfg = CONFIG.padding;
+
+  // Clamp paddings so they remain proportionate on smaller widths/heights
   const pad = {
-    top: height * CONFIG.paddingRatio.top,
-    right: width * CONFIG.paddingRatio.right,
-    bottom: height * CONFIG.paddingRatio.bottom,
-    left: width * CONFIG.paddingRatio.left
+    top: Math.max(padCfg.top, height * 0.08),
+    right: Math.max(padCfg.right, width * 0.04),
+    bottom: Math.max(padCfg.bottom, height * 0.14),
+    left: Math.max(padCfg.left, width * 0.09)
   };
 
   const chartRect = {
@@ -161,7 +176,8 @@ function computeLayout() {
     h: height - pad.top - pad.bottom
   };
 
-  const spacing = chartRect.w / (DATA.weeks.length - 1);
+  const n = DATA.weeks.length;
+  const spacing = chartRect.w / (n - 1);
 
   const points = DATA.weeks.map((w, i) => {
     const x = chartRect.x + i * spacing;
@@ -174,26 +190,9 @@ function computeLayout() {
     };
   });
 
-  // Micro-bubbles: static positions relative to chart rect
-  const microBubbles = generateMicroBubbles(chartRect, 26);
-
-  return { rect: chartRect, points, microBubbles };
+  return { rect: chartRect, points };
 }
 
-function generateMicroBubbles(rect, count) {
-  const bubbles = [];
-  for (let i = 0; i < count; i++) {
-    const t = i / (count - 1 || 1);
-    const x = rect.x + t * rect.w + (Math.random() - 0.5) * rect.w * 0.04;
-    const y =
-      rect.y +
-      rect.h * (0.22 + 0.6 * Math.random()) +
-      (Math.random() - 0.5) * rect.h * 0.02;
-    const r = 2 + Math.random() * 4;
-    bubbles.push({ x, y, r, alpha: 0.10 + Math.random() * 0.14 });
-  }
-  return bubbles;
-}
 
 /* DRAW HELPERS */
 
@@ -208,47 +207,29 @@ function drawBackdropGradient() {
   const width = canvas.width / deviceRatio;
   const height = canvas.height / deviceRatio;
 
-  const g = ctx.createLinearGradient(0, 0, width, height);
-  g.addColorStop(0, "rgba(3,5,15,1)");
-  g.addColorStop(0.35, "rgba(4,7,18,1)");
-  g.addColorStop(1, "rgba(1,1,5,1)");
+  // Deterministic dark gradient matching shell aesthetic
+  const g = ctx.createLinearGradient(0, 0, 0, height);
+  g.addColorStop(0, "#020309");
+  g.addColorStop(0.35, "#040712");
+  g.addColorStop(1, "#010108");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, width, height);
 
-  // Soft volumetric blobs behind the chart panel
+  // Subtle deterministic inner vignette
   ctx.save();
-  ctx.globalCompositeOperation = "screen";
-
-  const blob1 = ctx.createRadialGradient(
-    width * 0.18,
-    height * 0.1,
+  ctx.globalCompositeOperation = "multiply";
+  const vignette = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.45,
     0,
-    width * 0.18,
-    height * 0.1,
-    width * 0.32
+    width * 0.5,
+    height * 0.45,
+    Math.max(width, height) * 0.78
   );
-  blob1.addColorStop(0, "rgba(124,245,255,0.25)");
-  blob1.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = blob1;
-  ctx.beginPath();
-  ctx.arc(width * 0.18, height * 0.1, width * 0.35, 0, Math.PI * 2);
-  ctx.fill();
-
-  const blob2 = ctx.createRadialGradient(
-    width * 0.88,
-    height * 0.9,
-    0,
-    width * 0.88,
-    height * 0.9,
-    width * 0.36
-  );
-  blob2.addColorStop(0, "rgba(255,137,207,0.22)");
-  blob2.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = blob2;
-  ctx.beginPath();
-  ctx.arc(width * 0.88, height * 0.9, width * 0.36, 0, Math.PI * 2);
-  ctx.fill();
-
+  vignette.addColorStop(0, "rgba(0,0,0,0)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.55)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, width, height);
   ctx.restore();
 }
 
@@ -286,15 +267,7 @@ function drawZoneBands(rect) {
   ctx.fillStyle = gBad;
   ctx.fillRect(rect.x, yBadTop, rect.w, rect.y + rect.h - yBadTop);
 
-  // White inner glow at boundaries
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = "rgba(255,255,255,0.16)";
-  ctx.beginPath();
-  ctx.moveTo(rect.x, yGoodTop);
-  ctx.lineTo(rect.x + rect.w, yGoodTop);
-  ctx.moveTo(rect.x, yBadTop);
-  ctx.lineTo(rect.x + rect.w, yBadTop);
-  ctx.stroke();
+  // Zone boundaries are implicitly communicated via tick labels; no extra hard lines.
 
   ctx.restore();
 }
@@ -425,51 +398,23 @@ function drawAxes(rect) {
   ctx.restore();
 }
 
-function traceSpline(points, close, baseY) {
+function traceLine(points) {
   if (!points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 0; i < points.length - 1; i++) {
+  for (let i = 1; i < points.length; i++) {
     const p = points[i];
-    const n = points[i + 1];
-    const mx = (p.x + n.x) / 2;
-    const my = (p.y + n.y) / 2;
-    ctx.quadraticCurveTo(p.x, p.y, mx, my);
-  }
-  const last = points[points.length - 1];
-  ctx.lineTo(last.x, last.y);
-
-  if (close) {
-    ctx.lineTo(last.x, baseY);
-    ctx.lineTo(points[0].x, baseY);
-    ctx.closePath();
+    ctx.lineTo(p.x, p.y);
   }
 }
 
-function drawSplineArea(points, rect) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  const grad = ctx.createLinearGradient(
-    rect.x,
-    rect.y,
-    rect.x,
-    rect.y + rect.h
-  );
-  grad.addColorStop(0, "rgba(124,245,255,0.16)");
-  grad.addColorStop(0.4, "rgba(159,139,255,0.09)");
-  grad.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = grad;
-  traceSpline(points, true, rect.y + rect.h);
-  ctx.fill();
-  ctx.restore();
-}
+function drawLine(points) {
+  if (!points.length) return;
 
-function drawSplineLine(points) {
   ctx.save();
-  ctx.globalCompositeOperation = "lighter";
-  ctx.lineWidth = 3;
-  ctx.shadowColor = "rgba(124,245,255,0.35)";
-  ctx.shadowBlur = 20;
+  ctx.lineWidth = 2.4;
+  ctx.shadowColor = "rgba(124,245,255,0.22)";
+  ctx.shadowBlur = 14;
 
   const first = points[0];
   const last = points[points.length - 1];
@@ -479,86 +424,14 @@ function drawSplineLine(points) {
   grad.addColorStop(1, COLORS.spline.to);
 
   ctx.strokeStyle = grad;
-  traceSpline(points, false, 0);
+
+  traceLine(points);
   ctx.stroke();
-
   ctx.restore();
 }
 
-function drawMicroBubbles(bubbles) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  bubbles.forEach((b) => {
-    const g = ctx.createRadialGradient(
-      b.x,
-      b.y,
-      0,
-      b.x,
-      b.y,
-      b.r * 2.2
-    );
-    g.addColorStop(0, `rgba(180, 220, 255, ${b.alpha})`);
-    g.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(b.x, b.y, b.r * 2.2, 0, Math.PI * 2);
-    ctx.fill();
-  });
-  ctx.restore();
-}
 
-function drawCaustics(points, rect) {
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
 
-  // Gentle elliptical highlight hugging the main region
-  const cx = rect.x + rect.w * 0.5;
-  const cy = rect.y + rect.h * 0.82;
-  const caustic = ctx.createRadialGradient(
-    cx,
-    cy,
-    0,
-    cx,
-    cy,
-    rect.w * 0.35
-  );
-  caustic.addColorStop(0, "rgba(255,255,255,0.034)");
-  caustic.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = caustic;
-  ctx.beginPath();
-  ctx.ellipse(
-    cx,
-    cy,
-    rect.w * 0.38,
-    rect.h * 0.16,
-    0,
-    0,
-    Math.PI * 2
-  );
-  ctx.fill();
-
-  // Subtle glow beneath highest point
-  const maxPoint = points.reduce((m, p) => (p.value > m.value ? p : m), points[0]);
-  const rx = maxPoint.x;
-  const ry = rect.y + rect.h * 0.96;
-  const crestGlow = ctx.createRadialGradient(rx, ry, 0, rx, ry, rect.w * 0.18);
-  crestGlow.addColorStop(0, "rgba(255,137,207,0.06)");
-  crestGlow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = crestGlow;
-  ctx.beginPath();
-  ctx.ellipse(
-    rx,
-    ry,
-    rect.w * 0.22,
-    rect.h * 0.12,
-    0,
-    0,
-    Math.PI * 2
-  );
-  ctx.fill();
-
-  ctx.restore();
-}
 
 function drawPoints(points, rect) {
   ctx.save();
@@ -641,15 +514,25 @@ function drawPoints(points, rect) {
     ctx.arc(p.x, p.y, coreRadius + 0.4, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Optional: very soft guide down to x-axis; retained but subdued
+    // Vertical guide to x-axis (understated)
     ctx.save();
     ctx.setLineDash([2, 5]);
-    ctx.strokeStyle = "rgba(124,245,255,0.08)";
+    ctx.strokeStyle = "rgba(124,245,255,0.06)";
     ctx.lineWidth = 0.4;
     ctx.beginPath();
     ctx.moveTo(p.x, p.y + coreRadius + 1);
     ctx.lineTo(p.x, rect.y + rect.h);
     ctx.stroke();
+    ctx.restore();
+
+    // Value label (always above point; padding guarantees no collision)
+    ctx.save();
+    ctx.font = `9px ${CONFIG.fontFamily}`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+    ctx.fillStyle = "rgba(230, 238, 255, 0.96)";
+    const labelOffset = 8;
+    ctx.fillText(p.value.toFixed(1), p.x, p.y - labelOffset);
     ctx.restore();
   });
 
@@ -665,10 +548,7 @@ function render() {
   drawZoneBands(layout.rect);
   drawGrid(layout.rect);
   drawAxes(layout.rect);
-  drawSplineArea(layout.points, layout.rect);
-  drawSplineLine(layout.points);
-  drawMicroBubbles(layout.microBubbles);
-  drawCaustics(layout.points, layout.rect);
+  drawLine(layout.points);
   drawPoints(layout.points, layout.rect);
 }
 
@@ -676,8 +556,8 @@ function render() {
 
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
-  const width = Math.max(320, rect.width);
-  const height = Math.max(260, rect.height);
+  const width = Math.max(320, rect.width || canvas.clientWidth || 320);
+  const height = Math.max(260, rect.height || canvas.clientHeight || 260);
 
   deviceRatio = window.devicePixelRatio || 1;
   canvas.width = width * deviceRatio;
@@ -719,16 +599,20 @@ function updateTooltip(point) {
   const tx = canvasRect.left + point.x;
   const ty = canvasRect.top + point.y;
 
-  const tooltipWidth = tooltipEl.offsetWidth || 150;
+  const tooltipWidth =
+    tooltipEl.offsetWidth || CONFIG.tooltipWidthFallback;
   let left = tx;
-  if (tx - tooltipWidth / 2 < canvasRect.left + 12) {
-    left = canvasRect.left + 12 + tooltipWidth / 2;
-  } else if (tx + tooltipWidth / 2 > canvasRect.right - 12) {
-    left = canvasRect.right - 12 - tooltipWidth / 2;
+
+  // Center tooltip above point, clamped to canvas horizontally
+  const half = tooltipWidth / 2;
+  if (left - half < canvasRect.left + 8) {
+    left = canvasRect.left + 8 + half;
+  } else if (left + half > canvasRect.right - 8) {
+    left = canvasRect.right - 8 - half;
   }
 
   tooltipEl.style.left = `${left}px`;
-  tooltipEl.style.top = `${ty - 18}px`;
+  tooltipEl.style.top = `${ty - 20}px`;
   tooltipEl.hidden = false;
 }
 
