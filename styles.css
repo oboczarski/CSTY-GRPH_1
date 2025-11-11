@@ -412,7 +412,7 @@ body {
   background: radial-gradient(ellipse at center, rgba(255, 137, 207, 0.18), transparent 70%);
 }
 
-/* Canvas */
+/* Chart host becomes SVG-based container */
 
 #infographicCanvas {
   position: relative;
@@ -422,6 +422,268 @@ body {
   border-radius: 22px;
   z-index: 3;
   cursor: default;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+/* Liquid Glass Chart Namespace */
+
+.liquid-glass-chart-host {
+  position: relative;
+}
+
+/* SVG root */
+
+.liquid-glass-chart {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 18px;
+}
+
+/* Background: etched under-glass gradient */
+
+.liquid-glass-chart .lg-bg {
+  fill: url("#lg-chart-bg-fallback");
+  fill: radial-gradient(
+      circle at 0% 0%,
+      rgba(124, 245, 255, 0.04),
+      transparent 70%
+    )
+    fixed;
+  fill: rgba(3, 6, 14, 1);
+}
+
+/* Grid lines */
+
+.liquid-glass-chart .lg-grid-line {
+  shape-rendering: geometricPrecision;
+}
+
+.liquid-glass-chart .lg-grid-line--v.lg-grid-line--major,
+.liquid-glass-chart .lg-grid-line--h.lg-grid-line--major {
+  stroke: rgba(164, 207, 255, 0.18);
+  stroke-width: 0.7;
+}
+
+.liquid-glass-chart .lg-grid-line--v.lg-grid-line--minor,
+.liquid-glass-chart .lg-grid-line--h.lg-grid-line--minor {
+  stroke: rgba(110, 152, 210, 0.08);
+  stroke-width: 0.5;
+}
+
+/* Axes */
+
+.liquid-glass-chart .lg-axis {
+  stroke: rgba(170, 215, 255, 0.9);
+  stroke-width: 1.05;
+}
+
+.liquid-glass-chart .lg-axis--x {
+  stroke-linecap: square;
+}
+
+.liquid-glass-chart .lg-axis--y {
+  stroke-linecap: square;
+}
+
+/* Axis ticks */
+
+.liquid-glass-chart .lg-axis-tick {
+  stroke: rgba(162, 202, 255, 0.9);
+  stroke-width: 0.7;
+}
+
+/* Axis labels */
+
+.liquid-glass-chart .lg-axis-label {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  fill: rgba(150, 179, 230, 0.9);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.liquid-glass-chart .lg-axis-label--y {
+  text-anchor: end;
+  dominant-baseline: middle;
+}
+
+.liquid-glass-chart .lg-axis-label--x {
+  text-anchor: middle;
+  dominant-baseline: hanging;
+}
+
+/* Axis titles */
+
+.liquid-glass-chart .lg-axis-title {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  fill: rgba(177, 209, 255, 0.96);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.liquid-glass-chart .lg-axis-title--y {
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.liquid-glass-chart .lg-axis-title--x {
+  text-anchor: middle;
+  dominant-baseline: hanging;
+}
+
+/* Chart title and subtitle */
+
+.liquid-glass-chart .lg-chart-title {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  fill: rgba(224, 235, 255, 0.98);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.liquid-glass-chart .lg-chart-subtitle {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  fill: rgba(143, 173, 238, 0.98);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+/* Area under curve */
+
+.liquid-glass-chart .lg-area {
+  fill: url(#lg-area-fill);
+  opacity: 1;
+}
+
+/* Main line */
+
+.liquid-glass-chart .lg-line {
+  fill: none;
+}
+
+.liquid-glass-chart .lg-line--halo {
+  stroke: url(#lg-line-halo);
+  stroke-width: 4.2;
+  filter: url(#lg-line-glow);
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.liquid-glass-chart .lg-line--core {
+  stroke: url(#lg-line-core);
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Nodes */
+
+.liquid-glass-chart .lg-node {
+  vector-effect: non-scaling-stroke;
+}
+
+.liquid-glass-chart .lg-node--ring,
+.liquid-glass-chart .lg-node--key-ring {
+  fill: none;
+  stroke-width: 1.2;
+  filter: url(#lg-node-glow);
+}
+
+.liquid-glass-chart .lg-node--core {
+  stroke: none;
+}
+
+.liquid-glass-chart .lg-node--inner {
+  stroke: none;
+}
+
+/* Node vertical guides */
+
+.liquid-glass-chart .lg-node-guide {
+  stroke: rgba(124, 245, 255, 0.06);
+  stroke-width: 0.5;
+  stroke-dasharray: 2.5 4.5;
+}
+
+/* Point labels beneath axis */
+
+.liquid-glass-chart .lg-point-label {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 7px;
+  fill: rgba(132, 156, 214, 0.88);
+  text-anchor: middle;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Key point labels */
+
+.liquid-glass-chart .lg-key-label-title {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 7px;
+  fill: rgba(250, 221, 184, 0.96);
+  text-anchor: middle;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.liquid-glass-chart .lg-key-label-value {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 8px;
+  fill: rgba(252, 236, 207, 0.98);
+  text-anchor: middle;
+}
+
+.liquid-glass-chart .lg-key-label-desc {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 6.3px;
+  fill: rgba(177, 204, 255, 0.86);
+  text-anchor: middle;
+  letter-spacing: 0.04em;
+}
+
+/* Tooltip overrides to align with new chart aesthetic */
+
+.chart-tooltip {
+  font-family: "SF Pro Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  background: rgba(5, 10, 20, 0.98);
+  border-color: rgba(146, 199, 255, 0.9);
+  color: #e6f2ff;
+}
+
+.chart-tooltip::before {
+  border-color: rgba(5, 10, 20, 0.98) transparent transparent transparent;
+}
+
+.tooltip-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(136, 165, 220, 0.96);
+}
+
+.tooltip-value {
+  font-size: 0.95rem;
+  color: #7cf5ff;
+}
+
+.tooltip-zone {
+  font-size: 0.6rem;
+  color: rgba(180, 208, 255, 0.96);
 }
 
 /* Week track neutralized to avoid a perceived second x-axis.
