@@ -321,7 +321,7 @@ body {
 .chart-shell {
   position: relative;
   margin-top: 0.85rem;
-  padding: 0.81rem;
+  padding: 0.41rem;
   border-radius: 26px;
   border: 1px solid rgba(115, 158, 255, 0.35);
   box-shadow:
@@ -349,6 +349,7 @@ body {
   width: 100%;
   height: clamp(320px, 50vh, 420px);
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .weekly-chart-y-axis {
@@ -387,6 +388,7 @@ body {
   background-size: 69% 28px;
   pointer-events: none;
   z-index: 1;
+  border-radius: 10px;
 }
 
 .weekly-chart-line-layer {
@@ -421,10 +423,10 @@ body {
 
 .weekly-zone {
   position: absolute;
-  left: 3.5rem;
+  left: 3.4rem;
   right: 0.35rem;
-  border-bottom: 1px solid rgba(239, 246, 255, 0.05);
   z-index: 0;
+  border-radius: 10px;
 }
 
 .weekly-zone-label {
@@ -444,10 +446,12 @@ body {
 
 .weekly-zone--bad {
   background: linear-gradient(180deg, rgba(255, 66, 122, 0.12), rgba(5, 7, 15, 0));
+  border-radius: 4px;
 }
 
 .weekly-zone--good {
   background: linear-gradient(180deg, rgba(0, 195, 255, 0.09), rgba(5, 7, 15, 0));
+  border-radius: 4px;
 }
 
 .weekly-zone--great {
