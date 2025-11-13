@@ -79,14 +79,14 @@ function yFromPoints(pts) {
 function bucketFor(pts) {
   // Elite performance: 22+ points → Purple
   if (pts >= 22) {
-    return { name: "Elite", color: "#78ffedff", glow: "0 0 30px rgba(207, 120, 255, 0.95)" };
+    return { name: "Elite", color: "#78ffedff", glow: "0 0 8px 4px #78ffedff" };
   }
   // Solid performance: 16-21.9 points → Cyan
   if (pts >= 16) {
-    return { name: "Solid", color: "#00afff", glow: "0 0 10px 6px rgba(0, 191, 255, 1)" };
+    return { name: "Solid", color: "#00caffaa", glow: "0 0 8px 4px rgba(0, 191, 255, .81)" };
   }
   // Under performance: 0-15.9 points → Red/Pink
-  return { name: "Under", color: "#ff5f6d", glow: "0 0 18px rgba(255, 95, 109, 0.8)" };
+  return { name: "Under", color: "#f6ad", glow: "0 0 6px 4px #f6ac" };
 }
 
 // X-AXIS RENDERING: Creates the bottom axis with week labels (WK 1, WK 2, etc.)
@@ -216,7 +216,7 @@ function drawCurve(points) {
   const pathCore = document.createElementNS("http://www.w3.org/2000/svg", "path");
   pathCore.setAttribute("d", d);
   pathCore.setAttribute("fill", "none");
-  pathCore.setAttribute("stroke", "rgba(207, 120, 255, 0.7)"); // Purple stroke
+  pathCore.setAttribute("stroke", "rgba(70, 70, 255, 0.7)"); // Purple stroke
   pathCore.setAttribute("stroke-width", "2.6");
   pathCore.setAttribute("stroke-linecap", "round");
   pathCore.setAttribute("stroke-linejoin", "round");

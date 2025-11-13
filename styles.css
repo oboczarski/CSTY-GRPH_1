@@ -463,7 +463,7 @@ body {
   width: 12px;
   height: 12px;
   border-radius: 999px;
-  border: 1px solid rgb(220 222 230 / 98%);
+  border: 1px solid rgb(220 222 230 / 0%);
   display: grid;
   place-items: center;
   cursor: pointer;
