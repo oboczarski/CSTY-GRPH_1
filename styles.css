@@ -48,7 +48,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 2.8rem clamp(1.4rem, 3vw, 3.2rem);
-  background: var(--page-bg);
+  background: linear-gradient(45deg, #232045, #001b,#446);
   color: var(--text-primary);
   font-family: var(--font-main);
 }
@@ -67,12 +67,8 @@ body {
   width: min(1280px, 100%);
   padding: 1.9rem 1.9rem 2.4rem;
   border-radius: 32px;
-  background: radial-gradient(circle at 0% -20%, rgba(126, 245, 255, 0.06), transparent 60%) border-box,
-    radial-gradient(circle at 100% 120%, rgba(255, 137, 207, 0.05), transparent 65%) border-box,
-    var(--shell-bg);
   border: 1px solid var(--shell-border);
   box-shadow: var(--shell-shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(26px) saturate(150%);
   overflow: hidden;
 }
 
@@ -112,15 +108,12 @@ body {
   padding: 1rem 1.1rem 1.25rem;
   margin-bottom: 0.2rem;
   border-radius: 22px;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(124, 245, 255, 0.06), transparent 75%),
-    radial-gradient(circle at 100% 100%, rgba(255, 137, 207, 0.05), transparent 75%),
-    rgba(4, 7, 16, 0.98);
+  background: radial-gradient(circle at 0% 99%, rgba(252, 137, 207, 0.05), transparent 75%), rgba(4, 7, 16, 0.08);
   border: 1px solid rgba(126, 176, 255, 0.32);
   box-shadow:
     0 20px 70px rgba(0, 0, 0, 0.95),
     inset 0 0 18px rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(1px) saturate(90%) opacity(0.4);
 }
 
 /* HUD segments */
@@ -138,7 +131,7 @@ body {
 }
 
 .hud-label {
-  font-size: 0.6rem;
+  font-size: 0rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -148,8 +141,8 @@ body {
 
 .progress-circle {
   position: relative;
-  width: 126px;
-  height: 126px;
+  width: 138px;
+  height: 138px;
   border-radius: 50%;
   padding: 9px;
   display: flex;
@@ -344,13 +337,9 @@ body {
 
 .chart-shell {
   position: relative;
-  margin-top: 1.85rem;
-  padding: 1.2rem 1.2rem 1.4rem;
+  margin-top: 0.85rem;
+  padding: 0.81rem;
   border-radius: 26px;
-  background:
-    radial-gradient(circle at 15% 0%, rgba(124, 245, 255, 0.07), transparent 75%),
-    radial-gradient(circle at 85% 100%, rgba(255, 137, 207, 0.08), transparent 75%),
-    rgba(4, 7, 16, 0.98);
   border: 1px solid rgba(115, 158, 255, 0.35);
   box-shadow:
     0 26px 90px rgba(0, 0, 0, 0.98),
@@ -364,8 +353,7 @@ body {
 .weekly-chart-shell {
   position: relative;
   border-radius: 22px;
-  padding: 1rem 1.1rem 0.8rem;
-  background: radial-gradient(circle at top, rgba(1, 5, 16, 0.45), rgba(4, 7, 18, 0));
+  padding: 8px;
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: inset 0 0 0 1px rgba(124, 245, 255, 0.08);
   backdrop-filter: blur(18px);
@@ -376,7 +364,7 @@ body {
   color: rgba(239, 246, 255, 0.55);
   font-size: 0.6rem;
   display: block;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.2rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -419,12 +407,12 @@ body {
 
 .weekly-chart-grid {
   position: absolute;
-  inset: 0 0 0 3.5rem;
+  inset: 0 0 0 0;
   background-image: linear-gradient(
     transparent calc(100% - 38px),
     rgba(255, 255, 255, 0.04) calc(100% - 38px)
   );
-  background-size: 100% 40px;
+  background-size: 69% 36px;
   pointer-events: none;
   z-index: 1;
 }
@@ -438,14 +426,14 @@ body {
 .weekly-chart-x-axis {
   position: absolute;
   bottom: 0;
-  left: 3.5rem;
+  left: 3.42rem;
   right: 0.3rem;
   display: flex;
   justify-content: space-between;
   gap: 0;
-  font-size: 0.58rem;
+  font-size: 0.6rem;
   color: rgba(239, 246, 255, 0.82);
-  background: rgba(2, 6, 23, 0.85);
+  background: rgb(81 88 119 / 18%);
   border-top: 1px solid rgba(239, 246, 255, 0.06);
   border-radius: 0 0 18px 18px;
   backdrop-filter: blur(10px);
