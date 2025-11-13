@@ -607,13 +607,13 @@ body {
   }
 
   .progress-circle {
-    width: 90px;
-    height: 90px;
-    padding: 6px;
+    width: 105px;
+    height: 105px;
+    padding: 7px;
   }
 
   .progress-ring {
-    inset: -9px;
+    inset: -10px;
   }
 
   .progress-ring-track,
@@ -622,16 +622,17 @@ body {
   }
 
   .progress-value {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
   }
 
   .progress-label {
-    font-size: 0.56rem;
-    letter-spacing: 0.12em;
+    font-size: 0.58rem;
+    letter-spacing: 0.11em;
+    line-height: 1.1;
   }
 
   .progress-caption {
-    font-size: 0.38rem;
+    font-size: 0.4rem;
   }
 
   .hud-eyebrow {
@@ -756,31 +757,32 @@ body {
   }
 
   .progress-circle {
-    width: 75px;
-    height: 75px;
-    padding: 5px;
+    width: 88px;
+    height: 88px;
+    padding: 6px;
   }
 
   .progress-ring {
-    inset: -8px;
+    inset: -9px;
   }
 
   .progress-ring-track,
   .progress-ring-fill {
-    stroke-width: 5;
+    stroke-width: 5.5;
   }
 
   .progress-value {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
   }
 
   .progress-label {
-    font-size: 0.48rem;
-    letter-spacing: 0.11em;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    line-height: 1.1;
   }
 
   .progress-caption {
-    font-size: 0.34rem;
+    font-size: 0.36rem;
   }
 
   .hud-eyebrow {
@@ -905,31 +907,32 @@ body {
   }
 
   .progress-circle {
-    width: 60px;
-    height: 60px;
-    padding: 4px;
+    width: 72px;
+    height: 72px;
+    padding: 5px;
   }
 
   .progress-ring {
-    inset: -6px;
+    inset: -7px;
   }
 
   .progress-ring-track,
   .progress-ring-fill {
-    stroke-width: 4;
+    stroke-width: 4.5;
   }
 
   .progress-value {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
 
   .progress-label {
-    font-size: 0.38rem;
-    letter-spacing: 0.1em;
+    font-size: 0.4rem;
+    letter-spacing: 0.09em;
+    line-height: 1.1;
   }
 
   .progress-caption {
-    font-size: 0.28rem;
+    font-size: 0.3rem;
   }
 
   .hud-eyebrow {
