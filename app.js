@@ -36,9 +36,9 @@ function createZones() {
   // ZONE THRESHOLDS: Define the three performance zones with their point ranges
   // Under: 0-15.9 pts, Solid: 16-21.9 pts, Elite: 22-40 pts
   const stops = [
-    { className: "weekly-zone--bad", label: "Under", to: 15.9 },
-    { className: "weekly-zone--good", label: "Solid", to: 21.9 },
-    { className: "weekly-zone--great", label: "Elite", to: MAX_POINTS }
+    { className: "weekly-zone--bad", label: "Under < 16", to: 15.9 },
+    { className: "weekly-zone--good", label: "Solid ≥ 16", to: 21.9 },
+    { className: "weekly-zone--great", label: "Elite > 22", to: MAX_POINTS }
   ];
 
   let prev = 0;
