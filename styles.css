@@ -445,17 +445,17 @@ body {
 }
 
 .weekly-zone--bad {
-  background: linear-gradient(180deg, rgba(255, 66, 122, 0.12), rgba(5, 7, 15, 0));
+  background: linear-gradient(180deg, rgb(133 66 255 / 8%), rgba(5, 7, 15, 0));
   border-radius: 4px;
 }
 
 .weekly-zone--good {
-  background: linear-gradient(180deg, rgba(0, 195, 255, 0.09), rgba(5, 7, 15, 0));
+  background: linear-gradient(180deg, rgb(0 137 255 / 6%), rgb(0 0 0 / 0%));
   border-radius: 4px;
 }
 
 .weekly-zone--great {
-  background: linear-gradient(180deg, rgba(199, 97, 255, 0.1), rgba(5, 7, 15, 0));
+  background: linear-gradient(180deg, rgb(0 234 248 / 10%), rgba(5, 7, 15, 0));
 }
 
 .weekly-point {
@@ -472,15 +472,15 @@ body {
 
 .weekly-point-label {
   position: absolute;
-  top: -34px;
+  top: -38px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(1, 6, 14, 0.82);
+  background: rgb(221 234 255 / 13%);
   border: 1px solid rgba(212, 212, 216, 0.14);
   border-radius: 0.55rem;
-  padding: 0.22rem 0.32rem 0.12rem;
+  padding: 0.1rem 0.02rem;
   text-align: center;
-  min-width: 66px;
+  min-width: 57px;
   backdrop-filter: blur(12px);
   pointer-events: none;
 }

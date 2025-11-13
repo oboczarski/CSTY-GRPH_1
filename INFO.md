@@ -34,189 +34,123 @@
 
 ## app.js - JavaScript Logic
 
-•	Info: Weekly Data Array
-    •	Line Number: 10–20
-	•	Element/Rule: const WEEKLY_DATA = [ ... ];
-	•	What It Does: Defines static data array for 9 weeks, each with week number and fantasy points (e.g., { week: 1, pts: 27.9 }).
-	•	Styling/Logic Details: Hardcoded array; used in rendering functions for positioning and labels.
+•	Info: DATA: Weekly fantasy points for each week (9 weeks total)
+    •	Line Number: 7
+	•	Element/Rule: const WEEKLY_DATA = [...]
+	•	What It Does: This array controls the data points shown on the chart.
+	•	Styling/Logic Details: Contains 9 objects with week number and points (pts); used by all rendering functions to create chart elements.
 
-•	Info: Max Points Constant
+•	Info: CHART CONFIGURATION: Maximum points value for the Y-axis scale
     •	Line Number: 21
 	•	Element/Rule: const MAX_POINTS = 40;
 	•	What It Does: Sets the maximum y-axis value for scaling calculations.
-	•	Styling/Logic Details: Constant used in yFromPoints(), createZones(), and positioning.
+	•	Styling/Logic Details: Used in yFromPoints(), createZones(), and all percentage-based positioning calculations.
 
-•	Info: Chart Box Reference
-    •	Line Number: 22
-	•	Element/Rule: const chartBox = document.getElementById("weekly-chart-box");
-	•	What It Does: References the main chart container for appending zones.
-	•	Styling/Logic Details: DOM element; used in createZones() and renderWeeklyChart().
-
-•	Info: Points Layer Reference
-    •	Line Number: 23
-	•	Element/Rule: const pointsLayer = document.getElementById("weekly-chart-points");
-	•	What It Does: References the layer for points and curve.
-	•	Styling/Logic Details: DOM element; used in renderPoints() and drawCurve().
-
-•	Info: X-Axis Element Reference
+•	Info: DOM ELEMENTS: Main chart container
     •	Line Number: 24
-	•	Element/Rule: const xAxisEl = document.getElementById("weekly-chart-x-axis");
-	•	What It Does: References the x-axis container for week labels.
-	•	Styling/Logic Details: DOM element; used in renderXAxis().
-
-•	Info: Y-Axis Element Reference
-    •	Line Number: 25
-	•	Element/Rule: const yAxisEl = document.getElementById("weekly-chart-y-axis");
-	•	What It Does: References the y-axis container for point ticks.
-	•	Styling/Logic Details: DOM element; used in renderYAxis().
-
-•	Info: Curve SVG Variable
-    •	Line Number: 26
-	•	Element/Rule: let curveSvg = null;
-	•	What It Does: Global variable to hold the SVG element for the curve; reset on re-render.
-	•	Styling/Logic Details: Initialized to null; set in drawCurve(); reset in renderWeeklyChart().
-
-•	Info: Create Zones Function
-    •	Line Number: 28–46
-	•	Element/Rule: function createZones()
-	•	What It Does: Creates and appends zone divs ("Under", "Solid", "Elite") to chartBox, positioned vertically by percentage.
-	•	Styling/Logic Details: Loops stops array; calculates pct = (zone.to / MAX_POINTS) * 100; sets top and height via calc(); appends <div class="weekly-zone"> with label.
-
-•	Info: Y Position Calculator
-    •	Line Number: 48–51
-	•	Element/Rule: function yFromPoints(pts)
-	•	What It Does: Converts fantasy points to y-percentage (0–100%) for positioning.
-	•	Styling/Logic Details: Clamps points to 0–40; returns (1 - clamped / MAX_POINTS) * 100.
-
-•	Info: Bucket Determiner
-    •	Line Number: 53–60
-	•	Element/Rule: function bucketFor(pts)
-	•	What It Does: Determines performance bucket ("Elite", "Solid", "Under") based on points, returning color and glow.
-	•	Styling/Logic Details: Conditional: >=22 Elite (purple #cf78ff, glow rgba(207,120,255,0.95)); >=16 Solid (cyan #00bfff, glow rgba(0,191,255,0.9)); else Under (red #ff5f6d, glow rgba(255,95,109,0.8)).
-
-•	Info: X-Axis Renderer
-    •	Line Number: 62–70
-	•	Element/Rule: function renderXAxis()
-	•	What It Does: Clears and populates x-axis with week spans (e.g., "WK 1").
-	•	Styling/Logic Details: Clears xAxisEl.innerHTML; appends <span> for each WEEKLY_DATA entry.
-
-•	Info: Y-Axis Renderer
-    •	Line Number: 72–81
-	•	Element/Rule: function renderYAxis()
-	•	What It Does: Clears and populates y-axis with tick divs (40, 22, 16, 0 fpts).
-	•	Styling/Logic Details: Clears yAxisEl.innerHTML; appends <div class="weekly-chart-y-tick"> for each tick.
-
-•	Info: Points Renderer
-    •	Line Number: 83–119
-	•	Element/Rule: function renderPoints()
-	•	What It Does: Creates point divs with positions, colors, glows, and labels; collects points for curve.
-	•	Styling/Logic Details: Calculates pctX = ((index + 0.5) / n) * 100, pctY = yFromPoints(entry.pts); sets left/top via calc(); applies bucket.color and bucket.glow; appends label with week/value/bucket; calls drawCurve(curvePoints).
-
-•	Info: Curve Drawer
-    •	Line Number: 121–165
-	•	Element/Rule: function drawCurve(points)
-	•	What It Does: Generates SVG path for smooth curve connecting points, with glow effect.
-	•	Styling/Logic Details: Creates SVG if null; sets viewBox/width/height; converts percentages to absolute XY; builds cubic Bézier d path; adds glow path (stroke-width 8, rgba(207,120,255,0.15)) and core path (stroke-width 2.6, rgba(207,120,255,0.7)).
-
-•	Info: Chart Renderer
-    •	Line Number: 167–175
-	•	Element/Rule: function renderWeeklyChart()
-	•	What It Does: Orchestrates full chart render: removes zones, resets SVG, calls all sub-functions.
-	•	Styling/Logic Details: Removes .weekly-zone elements; sets curveSvg = null; calls createZones(), renderYAxis(), renderXAxis(), renderPoints().
-
-•	Info: App Initializer
-    •	Line Number: 195–200
-	•	Element/Rule: function init()
-	•	What It Does: Initializes the app: hydrates HUD circles, renders chart, adds resize listener.
-	•	Styling/Logic Details: Calls hydrateProgressCircles(), renderWeeklyChart(); adds window.addEventListener("resize", renderWeeklyChart).
-
-•	Info: DOM Ready Check
-    •	Line Number: 202–206
-	•	Element/Rule: if (document.readyState === "loading") ... else init();
-	•	What It Does: Ensures init() runs on DOM ready.
-	•	Styling/Logic Details: Standard DOMContentLoaded check.app.js - JavaScript Logic
-	•	File: app.js
-	•	Line Number: 10–20
-	•	Element/Rule: const WEEKLY_DATA = [ ... ];
-	•	What It Does: Defines static data array for 9 weeks, each with week number and fantasy points (e.g., { week: 1, pts: 27.9 }).
-	•	Styling/Logic Details: Hardcoded array; used in rendering functions for positioning and labels.
-	•	File: app.js
-	•	Line Number: 21
-	•	Element/Rule: const MAX_POINTS = 40;
-	•	What It Does: Sets the maximum y-axis value for scaling calculations.
-	•	Styling/Logic Details: Constant used in yFromPoints(), createZones(), and positioning.
-	•	File: app.js
-	•	Line Number: 22
 	•	Element/Rule: const chartBox = document.getElementById("weekly-chart-box");
-	•	What It Does: References the main chart container for appending zones.
-	•	Styling/Logic Details: DOM element; used in createZones() and renderWeeklyChart().
-	•	File: app.js
-	•	Line Number: 23
+	•	What It Does: References the main chart container element.
+	•	Styling/Logic Details: Used for appending zone divs in createZones() and cleanup in renderWeeklyChart().
+
+•	Info: DOM ELEMENTS: Points and curve layer
+    •	Line Number: 25
 	•	Element/Rule: const pointsLayer = document.getElementById("weekly-chart-points");
-	•	What It Does: References the layer for points and curve.
-	•	Styling/Logic Details: DOM element; used in renderPoints() and drawCurve().
-	•	File: app.js
-	•	Line Number: 24
+	•	What It Does: References the layer where points and curve are drawn.
+	•	Styling/Logic Details: Container for all data point divs and the SVG curve element; z-index 4.
+
+•	Info: DOM ELEMENTS: Bottom axis showing week labels
+    •	Line Number: 26
 	•	Element/Rule: const xAxisEl = document.getElementById("weekly-chart-x-axis");
 	•	What It Does: References the x-axis container for week labels.
-	•	Styling/Logic Details: DOM element; used in renderXAxis().
-	•	File: app.js
-	•	Line Number: 25
+	•	Styling/Logic Details: Populated by renderXAxis() with spans showing "WK 1", "WK 2", etc.
+
+•	Info: DOM ELEMENTS: Left axis showing point values
+    •	Line Number: 27
 	•	Element/Rule: const yAxisEl = document.getElementById("weekly-chart-y-axis");
-	•	What It Does: References the y-axis container for point ticks.
-	•	Styling/Logic Details: DOM element; used in renderYAxis().
-	•	File: app.js
-	•	Line Number: 26
+	•	What It Does: References the y-axis container for point value ticks.
+	•	Styling/Logic Details: Populated by renderYAxis() with divs showing 40, 22, 16, 0 fpts.
+
+•	Info: DOM ELEMENTS: SVG element for the connecting curve between points
+    •	Line Number: 28
 	•	Element/Rule: let curveSvg = null;
-	•	What It Does: Global variable to hold the SVG element for the curve; reset on re-render.
-	•	Styling/Logic Details: Initialized to null; set in drawCurve(); reset in renderWeeklyChart().
-	•	File: app.js
-	•	Line Number: 28–46
+	•	What It Does: Global variable to hold the SVG curve element; reset on re-render.
+	•	Styling/Logic Details: Created in drawCurve() when null; reset to null in renderWeeklyChart() for cleanup.
+
+•	Info: ZONE CREATION: Creates the three colored background zones (Under/Solid/Elite)
+    •	Line Number: 31-69
 	•	Element/Rule: function createZones()
-	•	What It Does: Creates and appends zone divs (“Under”, “Solid”, “Elite”) to chartBox, positioned vertically by percentage.
-	•	Styling/Logic Details: Loops stops array; calculates pct = (zone.to / MAX_POINTS) * 100; sets top and height via calc(); appends <div class="weekly-zone"> with label.
-	•	File: app.js
-	•	Line Number: 48–51
+	•	What It Does: These are the gradient bands that show performance categories.
+	•	Styling/Logic Details: ZONE THRESHOLDS - Under: 0-15.9 pts, Solid: 16-21.9 pts, Elite: 22-40 pts. Calculates zone height as percentage, positions from top (inverted), adds labels in top-right corner.
+
+•	Info: Y-AXIS CONVERSION: Converts fantasy points to Y-position percentage
+    •	Line Number: 72-77
 	•	Element/Rule: function yFromPoints(pts)
-	•	What It Does: Converts fantasy points to y-percentage (0–100%) for positioning.
-	•	Styling/Logic Details: Clamps points to 0–40; returns (1 - clamped / MAX_POINTS) * 100.
-	•	File: app.js
-	•	Line Number: 53–60
+	•	What It Does: Higher points = lower Y position (0% at top = 40pts, 100% at bottom = 0pts).
+	•	Styling/Logic Details: Clamps points between 0 and MAX_POINTS; returns inverted percentage: (1 - clamped / MAX_POINTS) * 100.
+
+•	Info: POINT CATEGORIZATION: Determines color and glow effect for each data point
+    •	Line Number: 80-92
 	•	Element/Rule: function bucketFor(pts)
-	•	What It Does: Determines performance bucket (“Elite”, “Solid”, “Under”) based on points, returning color and glow.
-	•	Styling/Logic Details: Conditional: >=22 Elite (purple #cf78ff, glow rgba(207,120,255,0.95)); >=16 Solid (cyan #00bfff, glow rgba(0,191,255,0.9)); else Under (red #ff5f6d, glow rgba(255,95,109,0.8)).
-	•	File: app.js
-	•	Line Number: 62–70
+	•	What It Does: Returns the performance bucket (Elite/Solid/Under) with styling properties.
+	•	Styling/Logic Details: Elite (22+ pts): purple #cf78ff with strong glow; Solid (16-21.9 pts): cyan #00bfff with medium glow; Under (0-15.9 pts): red/pink #ff5f6d with light glow.
+
+•	Info: X-AXIS RENDERING: Creates the bottom axis with week labels (WK 1, WK 2, etc.)
+    •	Line Number: 95-104
 	•	Element/Rule: function renderXAxis()
-	•	What It Does: Clears and populates x-axis with week spans (e.g., “WK 1”).
-	•	Styling/Logic Details: Clears xAxisEl.innerHTML; appends <span> for each WEEKLY_DATA entry.
-	•	File: app.js
-	•	Line Number: 72–81
+	•	What It Does: Clears and populates x-axis container with week labels.
+	•	Styling/Logic Details: Clears innerHTML; creates span for each week in WEEKLY_DATA; appends to xAxisEl.
+
+•	Info: Y-AXIS RENDERING: Creates the left axis with point value labels
+    •	Line Number: 107-119
 	•	Element/Rule: function renderYAxis()
-	•	What It Does: Clears and populates y-axis with tick divs (40, 22, 16, 0 fpts).
-	•	Styling/Logic Details: Clears yAxisEl.innerHTML; appends <div class="weekly-chart-y-tick"> for each tick.
-	•	File: app.js
-	•	Line Number: 83–119
+	•	What It Does: Shows the key thresholds: 40 (max), 22 (elite cutoff), 16 (solid cutoff), 0 (min).
+	•	Styling/Logic Details: Clears innerHTML; creates tick divs for [40, 22, 16, 0]; appends to yAxisEl with class "weekly-chart-y-tick".
+
+•	Info: POINT RENDERING: Creates and positions all data points on the chart
+    •	Line Number: 123-172
 	•	Element/Rule: function renderPoints()
-	•	What It Does: Creates point divs with positions, colors, glows, and labels; collects points for curve.
-	•	Styling/Logic Details: Calculates pctX = ((index + 0.5) / n) * 100, pctY = yFromPoints(entry.pts); sets left/top via calc(); applies bucket.color and bucket.glow; appends label with week/value/bucket; calls drawCurve(curvePoints).
-	•	File: app.js
-	•	Line Number: 121–165
+	•	What It Does: Also generates the hover labels and connects points with a curve.
+	•	Styling/Logic Details: Calculates X position (centered in week column): ((index + 0.5) / n) * 100; calculates Y position via yFromPoints(); creates circular 12px point with bucket color and glow; adds hover label with week/value/performance; calls drawCurve() with collected coordinates.
+
+•	Info: CURVE DRAWING: Creates smooth Bezier curve connecting all data points
+    •	Line Number: 176-239
 	•	Element/Rule: function drawCurve(points)
-	•	What It Does: Generates SVG path for smooth curve connecting points, with glow effect.
-	•	Styling/Logic Details: Creates SVG if null; sets viewBox/width/height; converts percentages to absolute XY; builds cubic Bézier d path; adds glow path (stroke-width 8, rgba(207,120,255,0.15)) and core path (stroke-width 2.6, rgba(207,120,255,0.7)).
-	•	File: app.js
-	•	Line Number: 167–175
+	•	What It Does: Uses SVG path with cubic Bezier curves for smooth transitions.
+	•	Styling/Logic Details: Creates SVG if null; sets viewBox to match chart dimensions; converts percentage coords to absolute pixels; builds cubic Bezier path (control points at 35% distance); creates glow path (8px wide, transparent purple) and core path (2.6px wide, solid purple); prepends to pointsLayer behind points.
+
+•	Info: CHART ORCHESTRATION: Main function that renders the entire weekly chart
+    •	Line Number: 242-255
 	•	Element/Rule: function renderWeeklyChart()
-	•	What It Does: Orchestrates full chart render: removes zones, resets SVG, calls all sub-functions.
-	•	Styling/Logic Details: Removes .weekly-zone elements; sets curveSvg = null; calls createZones(), renderYAxis(), renderXAxis(), renderPoints().
-	•	File: app.js
-	•	Line Number: 195–200
+	•	What It Does: Coordinates all rendering functions in the correct order.
+	•	Styling/Logic Details: Cleans up existing zones; resets curveSvg to null; calls createZones() → renderYAxis() → renderXAxis() → renderPoints() in sequence.
+
+•	Info: PROGRESS DATA: Stats for the two HUD circles
+    •	Line Number: 265-269
+	•	Element/Rule: const PROGRESS_CONFIG
+	•	What It Does: Controls the circular progress indicators (Left: Consistency %, Right: Ceiling rank).
+	•	Styling/Logic Details: ceilingRankMax (20 total positions); consistencyPercent (66.7%); ceilingRank (4, lower is better).
+
+•	Info: UTILITY: Clamps a value between min and max bounds
+    •	Line Number: 272-274
+	•	Element/Rule: function clamp(value, min, max)
+	•	What It Does: Ensures value stays within specified range.
+	•	Styling/Logic Details: Returns Math.max(min, Math.min(max, value)).
+
+•	Info: PROGRESS CIRCLE HYDRATION: Updates the SVG circles with actual data values
+    •	Line Number: 278-312
+	•	Element/Rule: function hydrateProgressCircles()
+	•	What It Does: Sets CSS custom property --progress to control how much of the circle is filled.
+	•	Styling/Logic Details: LEFT CIRCLE - Converts 66.7% to 0.667 for CSS variable. RIGHT CIRCLE - Normalizes rank to 0-1 scale (inverted: lower rank = more filled); formula: (maxRank - currentRank) / (maxRank - 1); rank 4 = 0.842 (84.2% filled).
+
+•	Info: INITIALIZATION: Sets up the entire page when it loads
+    •	Line Number: 316-322
 	•	Element/Rule: function init()
-	•	What It Does: Initializes the app: hydrates HUD circles, renders chart, adds resize listener.
-	•	Styling/Logic Details: Calls hydrateProgressCircles(), renderWeeklyChart(); adds window.addEventListener("resize", renderWeeklyChart).
-	•	File: app.js
-	•	Line Number: 202–206
+	•	What It Does: Runs all setup functions and attaches event listeners.
+	•	Styling/Logic Details: Calls hydrateProgressCircles() to update HUD circles; calls renderWeeklyChart() to draw chart; adds resize listener to re-render chart on window resize.
+
+•	Info: DOM READY CHECK: Ensures initialization runs when page is ready
+    •	Line Number: 325-329
 	•	Element/Rule: if (document.readyState === "loading") ... else init();
-	•	What It Does: Ensures init() runs on DOM ready.
-	•	Styling/Logic Details: Standard DOMContentLoaded check.
+	•	What It Does: Standard DOMContentLoaded pattern.
+	•	Styling/Logic Details: Waits for DOM if loading, otherwise runs init() immediately.
+
