@@ -516,14 +516,306 @@ body {
     padding: 1.4rem 1.4rem 1.8rem;
     border-radius: 26px;
   }
+
+  .hud {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    padding: 1rem;
+  }
+
+  .hud-segment--left,
+  .hud-segment--right {
+    align-items: center;
+  }
+
+  .hud-segment--right {
+    align-items: center;
+  }
+
+  .progress-circle {
+    width: 120px;
+    height: 120px;
+  }
+
+  .progress-value {
+    font-size: 1.4rem;
+  }
+
+  .progress-label {
+    font-size: 0.7rem;
+  }
+
+  .hud-metrics {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 720px) {
   body {
-    padding: 1.4rem 1rem;
+    padding: 1rem 0.8rem;
   }
 
   .glass-shell {
-    padding: 1.1rem 1.1rem 1.4rem;
+    padding: 0.9rem 0.9rem 1.2rem;
+    border-radius: 20px;
+  }
+
+  .hud {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0.8rem;
+    border-radius: 16px;
+  }
+
+  .progress-circle {
+    width: 110px;
+    height: 110px;
+    padding: 8px;
+  }
+
+  .progress-ring {
+    inset: -11px;
+  }
+
+  .progress-value {
+    font-size: 1.3rem;
+  }
+
+  .progress-label {
+    font-size: 0.65rem;
+  }
+
+  .progress-caption {
+    font-size: 0.48rem;
+  }
+
+  .hud-eyebrow {
+    font-size: 0.75rem;
+  }
+
+  .hud-context {
+    font-size: 0.8rem;
+  }
+
+  .hud-metrics {
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .metric-value {
+    font-size: 1.3rem;
+  }
+
+  .metric-sub {
+    font-size: 0.75rem;
+  }
+
+  .hud-zones-legend {
+    justify-content: center;
+  }
+
+  .zone-chip {
+    font-size: 0.5rem;
+    padding: 0.16rem 0.45rem;
+  }
+
+  .chart-shell {
+    margin-top: 0.6rem;
+    border-radius: 10px;
+  }
+
+  .weekly-chart-box {
+    height: 300px;
+  }
+
+  .weekly-chart-y-axis {
+    width: 2.8rem;
+    padding: 0.7rem 2px 1.8rem;
+  }
+
+  .weekly-chart-y-tick {
+    font-size: 0.54rem;
+  }
+
+  .weekly-chart-line-layer {
+    inset: 0.8rem 0.2rem 1.8rem 3rem;
+  }
+
+  .weekly-chart-x-axis {
+    left: 2.9rem;
+    font-size: 0.56rem;
+    padding: 0.3rem 0 0.35rem;
+  }
+
+  .weekly-zone {
+    left: 2.9rem;
+  }
+
+  .weekly-zone-label {
+    font-size: 0.46rem;
+    padding: 0.1rem 0.35rem 0.14rem;
+  }
+
+  .weekly-point {
+    width: 11px;
+    height: 11px;
+  }
+
+  .weekly-point-label {
+    top: -36px;
+    min-width: 54px;
+    padding: 0.08rem 0.02rem;
+  }
+
+  .weekly-point-label__week {
+    font-size: 0.45rem;
+  }
+
+  .weekly-point-label__value {
+    font-size: 0.64rem;
+  }
+
+  .weekly-point-label__bucket {
+    font-size: 0.45rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 0.8rem 0.6rem;
+  }
+
+  .glass-shell {
+    padding: 0.7rem 0.7rem 1rem;
+    border-radius: 18px;
+  }
+
+  .hud {
+    gap: 0.8rem;
+    padding: 0.7rem;
+    border-radius: 14px;
+  }
+
+  .progress-circle {
+    width: 100px;
+    height: 100px;
+    padding: 7px;
+  }
+
+  .progress-ring {
+    inset: -10px;
+  }
+
+  .progress-ring-track,
+  .progress-ring-fill {
+    stroke-width: 6;
+  }
+
+  .progress-value {
+    font-size: 1.2rem;
+  }
+
+  .progress-label {
+    font-size: 0.6rem;
+  }
+
+  .progress-caption {
+    font-size: 0.44rem;
+  }
+
+  .hud-eyebrow {
+    font-size: 0.7rem;
+  }
+
+  .hud-context {
+    font-size: 0.75rem;
+    margin-top: 0.3rem;
+  }
+
+  .hud-metrics {
+    gap: 0.8rem;
+  }
+
+  .metric-label {
+    font-size: 0.65rem;
+  }
+
+  .metric-value {
+    font-size: 1.2rem;
+  }
+
+  .metric-sub {
+    font-size: 0.7rem;
+  }
+
+  .hud-zones-legend {
+    margin-top: 0.4rem;
+    gap: 0.3rem;
+  }
+
+  .zone-chip {
+    font-size: 0.48rem;
+    padding: 0.14rem 0.4rem;
+  }
+
+  .chart-shell {
+    margin-top: 0.5rem;
+    border-radius: 9px;
+  }
+
+  .weekly-chart-box {
+    height: 280px;
+  }
+
+  .weekly-chart-y-axis {
+    width: 2.5rem;
+    padding: 0.6rem 2px 1.6rem;
+  }
+
+  .weekly-chart-y-tick {
+    font-size: 0.5rem;
+  }
+
+  .weekly-chart-line-layer {
+    inset: 0.7rem 0.15rem 1.6rem 2.7rem;
+  }
+
+  .weekly-chart-x-axis {
+    left: 2.6rem;
+    font-size: 0.52rem;
+    padding: 0.25rem 0 0.3rem;
+  }
+
+  .weekly-zone {
+    left: 2.6rem;
+  }
+
+  .weekly-zone-label {
+    font-size: 0.43rem;
+    padding: 0.08rem 0.3rem 0.12rem;
+  }
+
+  .weekly-point {
+    width: 10px;
+    height: 10px;
+  }
+
+  .weekly-point-label {
+    top: -34px;
+    min-width: 50px;
+    padding: 0.06rem 0.02rem;
+    border-radius: 0.5rem;
+  }
+
+  .weekly-point-label__week {
+    font-size: 0.42rem;
+  }
+
+  .weekly-point-label__value {
+    font-size: 0.6rem;
+  }
+
+  .weekly-point-label__bucket {
+    font-size: 0.42rem;
   }
 }
