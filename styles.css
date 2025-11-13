@@ -148,22 +148,22 @@ body {
 
 .progress-ring {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -5px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
   transform: rotate(-90deg);
 }
 
 .progress-ring-track {
   fill: none;
   stroke: rgba(90, 112, 164, 0.35);
-  stroke-width: 9;
+  stroke-width: 7;
 }
 
 .progress-ring-fill {
   fill: none;
-  stroke-width: 9;
+  stroke-width: 7;
   stroke-linecap: round;
   stroke-dasharray: 289; /* approx circumference for r=46 */
   stroke-dashoffset: calc(289 * (1 - var(--progress, 0)));
@@ -544,6 +544,11 @@ body {
     font-size: 0.48rem;
   }
 
+  .progress-ring-track,
+  .progress-ring-fill {
+    stroke-width: 6;
+  }
+
   .hud-eyebrow {
     font-size: 0.8rem;
   }
@@ -613,7 +618,7 @@ body {
 
   .progress-ring-track,
   .progress-ring-fill {
-    stroke-width: 8;
+    stroke-width: 6;
   }
 
   .progress-value {
@@ -759,7 +764,7 @@ body {
 
   .progress-ring-track,
   .progress-ring-fill {
-    stroke-width: 7;
+    stroke-width: 5;
   }
 
   .progress-value {
@@ -905,7 +910,7 @@ body {
 
   .progress-ring-track,
   .progress-ring-fill {
-    stroke-width: 6;
+    stroke-width: 4.5;
   }
 
   .progress-value {
