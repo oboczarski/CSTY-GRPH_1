@@ -321,8 +321,8 @@ body {
 .chart-shell {
   position: relative;
   margin-top: 0.85rem;
-  padding: 0.41rem;
-  border-radius: 26px;
+  padding: 8px;
+  border-radius: 22px;
   border: 1px solid rgba(115, 158, 255, 0.35);
   box-shadow:
     0 26px 90px rgba(0, 0, 0, 0.98),
@@ -330,19 +330,6 @@ body {
     inset 0 20px 60px rgba(255, 255, 255, 0.018);
   overflow: hidden;
 }
-
-/* Reference weekly chart shell */
-
-.weekly-chart-shell {
-  position: relative;
-  border-radius: 22px;
-  padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(18px);
-  overflow: hidden;
-}
-
-
 
 .weekly-chart-box {
   position: relative;
@@ -544,9 +531,5 @@ body {
 
   .glass-shell {
     padding: 1.1rem 1.1rem 1.4rem;
-  }
-
-  .weekly-chart-shell {
-    padding: 0.85rem 0.85rem 0.6rem;
   }
 }
