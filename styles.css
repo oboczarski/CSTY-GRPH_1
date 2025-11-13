@@ -148,10 +148,10 @@ body {
 
 .progress-ring {
   position: absolute;
-  top: -8px;
-  left: -8px;
-  width: calc(100% + 16px);
-  height: calc(100% + 16px);
+  top: -9px;
+  left: -9px;
+  width: calc(100% + 18px);
+  height: calc(100% + 18px);
   transform: rotate(-90deg);
 }
 
