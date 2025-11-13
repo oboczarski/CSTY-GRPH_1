@@ -244,8 +244,9 @@ body {
 
 .metric-primary {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
 }
 
 .metric-value {
@@ -649,16 +650,16 @@ body {
   }
 
   .metric-label {
-    font-size: 0.54rem;
+    font-size: 0.48rem;
     letter-spacing: 0.14em;
   }
 
   .metric-value {
-    font-size: 1.05rem;
+    font-size: 0.95rem;
   }
 
   .metric-sub {
-    font-size: 0.6rem;
+    font-size: 0.5rem;
   }
 
   .hud-zones-legend {
@@ -667,8 +668,8 @@ body {
   }
 
   .zone-chip {
-    font-size: 0.42rem;
-    padding: 0.14rem 0.38rem;
+    font-size: 0.38rem;
+    padding: 0.13rem 0.35rem;
     letter-spacing: 0.12em;
   }
 
@@ -687,7 +688,7 @@ body {
   }
 
   .weekly-chart-y-tick {
-    font-size: 0.5rem;
+    font-size: 0.46rem;
     padding-bottom: 0.28rem;
   }
 
@@ -697,7 +698,7 @@ body {
 
   .weekly-chart-x-axis {
     left: 2.7rem;
-    font-size: 0.52rem;
+    font-size: 0.48rem;
     padding: 0.3rem 0 0.35rem;
   }
 
@@ -706,8 +707,8 @@ body {
   }
 
   .weekly-zone-label {
-    font-size: 0.42rem;
-    padding: 0.1rem 0.32rem 0.13rem;
+    font-size: 0.38rem;
+    padding: 0.09rem 0.3rem 0.12rem;
     letter-spacing: 0.1em;
   }
 
@@ -717,23 +718,23 @@ body {
   }
 
   .weekly-point-label {
-    top: -34px;
-    min-width: 50px;
-    padding: 0.08rem 0.02rem;
+    top: -32px;
+    min-width: 48px;
+    padding: 0.07rem 0.02rem;
     border-radius: 0.5rem;
   }
 
   .weekly-point-label__week {
-    font-size: 0.4rem;
+    font-size: 0.36rem;
     letter-spacing: 0.1em;
   }
 
   .weekly-point-label__value {
-    font-size: 0.58rem;
+    font-size: 0.54rem;
   }
 
   .weekly-point-label__bucket {
-    font-size: 0.4rem;
+    font-size: 0.36rem;
     letter-spacing: 0.07em;
   }
 }
@@ -783,41 +784,41 @@ body {
   }
 
   .hud-eyebrow {
-    font-size: 0.58rem;
+    font-size: 0.52rem;
     letter-spacing: 0.09em;
   }
 
   .hud-context {
     margin-top: 0.24rem;
-    font-size: 0.58rem;
+    font-size: 0.52rem;
   }
 
   .hud-metrics {
-    gap: 0.65rem;
+    gap: 0.6rem;
     margin: 0.02rem 0 0.18rem;
   }
 
   .metric-label {
-    font-size: 0.48rem;
+    font-size: 0.42rem;
     letter-spacing: 0.13em;
   }
 
   .metric-value {
-    font-size: 0.92rem;
+    font-size: 0.82rem;
   }
 
   .metric-sub {
-    font-size: 0.52rem;
+    font-size: 0.44rem;
   }
 
   .hud-zones-legend {
     margin-top: 0.32rem;
-    gap: 0.22rem;
+    gap: 0.2rem;
   }
 
   .zone-chip {
-    font-size: 0.38rem;
-    padding: 0.12rem 0.32rem;
+    font-size: 0.34rem;
+    padding: 0.11rem 0.3rem;
     letter-spacing: 0.11em;
   }
 
@@ -836,7 +837,7 @@ body {
   }
 
   .weekly-chart-y-tick {
-    font-size: 0.45rem;
+    font-size: 0.4rem;
     padding-bottom: 0.26rem;
   }
 
@@ -846,7 +847,7 @@ body {
 
   .weekly-chart-x-axis {
     left: 2.4rem;
-    font-size: 0.48rem;
+    font-size: 0.44rem;
     padding: 0.26rem 0 0.3rem;
   }
 
@@ -855,8 +856,8 @@ body {
   }
 
   .weekly-zone-label {
-    font-size: 0.38rem;
-    padding: 0.08rem 0.28rem 0.11rem;
+    font-size: 0.34rem;
+    padding: 0.07rem 0.26rem 0.1rem;
     letter-spacing: 0.09em;
   }
 
@@ -866,23 +867,23 @@ body {
   }
 
   .weekly-point-label {
-    top: -32px;
-    min-width: 46px;
-    padding: 0.07rem 0.02rem;
+    top: -30px;
+    min-width: 44px;
+    padding: 0.06rem 0.02rem;
     border-radius: 0.45rem;
   }
 
   .weekly-point-label__week {
-    font-size: 0.36rem;
+    font-size: 0.32rem;
     letter-spacing: 0.09em;
   }
 
   .weekly-point-label__value {
-    font-size: 0.52rem;
+    font-size: 0.48rem;
   }
 
   .weekly-point-label__bucket {
-    font-size: 0.36rem;
+    font-size: 0.32rem;
     letter-spacing: 0.06em;
   }
 }
@@ -898,75 +899,75 @@ body {
   }
 
   .hud {
-    gap: 0.35rem;
+    gap: 0.3rem;
     padding: 0.5rem 0.5rem 0.6rem;
     border-radius: 14px;
   }
 
   .progress-circle {
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
     padding: 4px;
   }
 
   .progress-ring {
-    inset: -7px;
+    inset: -6px;
   }
 
   .progress-ring-track,
   .progress-ring-fill {
-    stroke-width: 4.5;
+    stroke-width: 4;
   }
 
   .progress-value {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
   }
 
   .progress-label {
-    font-size: 0.42rem;
+    font-size: 0.38rem;
     letter-spacing: 0.1em;
   }
 
   .progress-caption {
-    font-size: 0.3rem;
+    font-size: 0.28rem;
   }
 
   .hud-eyebrow {
-    font-size: 0.52rem;
+    font-size: 0.46rem;
     letter-spacing: 0.08em;
   }
 
   .hud-context {
-    margin-top: 0.2rem;
-    font-size: 0.52rem;
+    margin-top: 0.18rem;
+    font-size: 0.46rem;
   }
 
   .hud-metrics {
-    gap: 0.55rem;
+    gap: 0.5rem;
     margin: 0.02rem 0 0.15rem;
   }
 
   .metric-label {
-    font-size: 0.42rem;
+    font-size: 0.36rem;
     letter-spacing: 0.12em;
   }
 
   .metric-value {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
   }
 
   .metric-sub {
-    font-size: 0.46rem;
+    font-size: 0.38rem;
   }
 
   .hud-zones-legend {
-    margin-top: 0.28rem;
-    gap: 0.2rem;
+    margin-top: 0.26rem;
+    gap: 0.18rem;
   }
 
   .zone-chip {
-    font-size: 0.34rem;
-    padding: 0.1rem 0.28rem;
+    font-size: 0.3rem;
+    padding: 0.09rem 0.25rem;
     letter-spacing: 0.1em;
   }
 
@@ -980,32 +981,32 @@ body {
   }
 
   .weekly-chart-y-axis {
-    width: 2rem;
+    width: 1.9rem;
     padding: 0.55rem 2px 1.4rem;
   }
 
   .weekly-chart-y-tick {
-    font-size: 0.4rem;
+    font-size: 0.36rem;
     padding-bottom: 0.24rem;
   }
 
   .weekly-chart-line-layer {
-    inset: 0.65rem 0.12rem 1.4rem 2.2rem;
+    inset: 0.65rem 0.12rem 1.4rem 2.1rem;
   }
 
   .weekly-chart-x-axis {
-    left: 2.1rem;
-    font-size: 0.44rem;
+    left: 2rem;
+    font-size: 0.4rem;
     padding: 0.24rem 0 0.28rem;
   }
 
   .weekly-zone {
-    left: 2.1rem;
+    left: 2rem;
   }
 
   .weekly-zone-label {
-    font-size: 0.34rem;
-    padding: 0.07rem 0.24rem 0.1rem;
+    font-size: 0.3rem;
+    padding: 0.06rem 0.22rem 0.09rem;
     letter-spacing: 0.08em;
   }
 
@@ -1015,23 +1016,23 @@ body {
   }
 
   .weekly-point-label {
-    top: -30px;
-    min-width: 42px;
-    padding: 0.06rem 0.02rem;
+    top: -28px;
+    min-width: 40px;
+    padding: 0.05rem 0.02rem;
     border-radius: 0.4rem;
   }
 
   .weekly-point-label__week {
-    font-size: 0.32rem;
+    font-size: 0.3rem;
     letter-spacing: 0.08em;
   }
 
   .weekly-point-label__value {
-    font-size: 0.48rem;
+    font-size: 0.44rem;
   }
 
   .weekly-point-label__bucket {
-    font-size: 0.32rem;
+    font-size: 0.3rem;
     letter-spacing: 0.05em;
   }
 }
