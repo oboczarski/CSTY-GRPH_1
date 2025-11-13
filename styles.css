@@ -110,9 +110,7 @@ body {
   border-radius: 22px;
   background: radial-gradient(circle at 0% 99%, rgba(252, 137, 207, 0.05), transparent 75%), rgba(4, 7, 16, 0.08);
   border: 1px solid rgba(126, 176, 255, 0.32);
-  box-shadow:
-    0 20px 70px rgba(0, 0, 0, 0.95),
-    inset 0 0 18px rgba(255, 255, 255, 0.02);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(1px) saturate(90%) opacity(0.4);
 }
 
@@ -123,11 +121,13 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: visible;
 }
 
 .hud-segment--left,
 .hud-segment--right {
   align-items: center;
+  overflow: visible;
 }
 
 
@@ -145,8 +145,9 @@ body {
   justify-content: center;
   background: radial-gradient(rgba(55, 65, 155, 0.22),#3335);
   border: 1px solid rgba(151, 194, 255, 0.42);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.96),
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.96),
     inset 0 0 12px rgba(255, 255, 255, 0.02);
+  overflow: visible;
 }
 
 
@@ -169,7 +170,6 @@ body {
   stroke-linecap: round;
   stroke-dasharray: 289; /* approx circumference for r=46 */
   stroke-dashoffset: calc(289 * (1 - var(--progress, 0)));
-  filter: drop-shadow(0 0 10px rgba(124, 245, 255, 0.42));
 }
 
 .progress-ring-fill--ceiling {
