@@ -102,7 +102,7 @@ body {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(0, 2.1fr) minmax(0, 2.4fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 2.4fr) minmax(0, 1.2fr);
   gap: 1.5rem;
   align-items: stretch;
   padding: 1rem 1.1rem 1.25rem;
@@ -127,15 +127,10 @@ body {
 
 .hud-segment--left,
 .hud-segment--right {
-  gap: 0.4rem;
+  align-items: center;
 }
 
-.hud-label {
-  font-size: 0rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
+
 
 /* Progress circles: shared */
 
@@ -148,32 +143,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background:
-    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.12), transparent 70%),
-    radial-gradient(circle at 80% 120%, rgba(124, 245, 255, 0.08), transparent 80%),
-    rgba(3, 5, 13, 0.98);
+  background: radial-gradient(rgba(55, 65, 155, 0.22),#3335);
   border: 1px solid rgba(151, 194, 255, 0.42);
-  box-shadow:
-    0 14px 50px rgba(0, 0, 0, 0.96),
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.96),
     inset 0 0 12px rgba(255, 255, 255, 0.02);
 }
 
-.progress-circle::after {
-  /* subtle edge highlight */
-  content: "";
-  position: absolute;
-  inset: 5px;
-  border-radius: 50%;
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  border-right: 1px solid rgba(124, 245, 255, 0.08);
-  opacity: 0.9;
-  pointer-events: none;
-}
+
 
 .progress-ring {
   position: absolute;
-  inset: 6px;
+  inset: -13px;
   transform: rotate(-90deg);
 }
 
@@ -195,7 +175,6 @@ body {
 .progress-ring-fill--ceiling {
   /* start arc slightly offset for distinct feel */
   transform-origin: 60px 60px;
-  transform: rotate(18deg);
 }
 
 .progress-circle-inner {
@@ -215,7 +194,7 @@ body {
 }
 
 .progress-label {
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-soft);
@@ -233,16 +212,17 @@ body {
 }
 
 .hud-eyebrow {
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
 .hud-context {
-  margin-top: 0.08rem;
-  font-size: 0.7rem;
+  margin-top: 0.4rem;
+  font-size: 0.87rem;
   color: var(--text-soft);
+  text-align: center;
 }
 
 .hud-metrics {
@@ -258,7 +238,7 @@ body {
 }
 
 .metric-label {
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--text-muted);
@@ -271,24 +251,21 @@ body {
 }
 
 .metric-value {
-  font-size: 1.18rem;
+  font-size: 1.5rem;
   font-weight: 500;
   color: var(--accent-violet);
 }
 
 .metric-sub {
-  font-size: 0.64rem;
+  font-size: 0.8rem;
   color: var(--accent-cyan);
   opacity: 0.9;
 }
 
-.hud-series-label {
-  font-size: 0.64rem;
-  color: var(--text-soft);
-}
+
 
 .hud-zones-legend {
-  margin-top: 0.2rem;
+  margin-top: 0.52rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
@@ -332,7 +309,9 @@ body {
 .hud-segment--right .progress-circle {
   transition: none;
 }
-
+.hud-segment.hud-segment--center {
+    align-items: center;
+}
 /* CHART SHELL */
 
 .chart-shell {
@@ -360,14 +339,7 @@ body {
   overflow: hidden;
 }
 
-.weekly-chart-shell__hint {
-  color: rgba(239, 246, 255, 0.55);
-  font-size: 0.6rem;
-  display: block;
-  margin-bottom: 0.2rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+
 
 .weekly-chart-box {
   position: relative;
@@ -375,7 +347,6 @@ body {
   height: clamp(320px, 50vh, 420px);
   border-radius: 20px;
   overflow: hidden;
-  background: radial-gradient(circle at 35% 20%, rgba(2, 6, 23, 0.22), rgba(2, 6, 23, 0));
 }
 
 .weekly-chart-y-axis {
@@ -384,7 +355,6 @@ body {
   bottom: 1.35rem;
   left: 0.35rem;
   width: 3.2rem;
-  background: linear-gradient(180deg, rgba(2, 6, 23, 0.78), rgba(2, 6, 23, 0));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -412,7 +382,7 @@ body {
     transparent calc(100% - 38px),
     rgba(255, 255, 255, 0.04) calc(100% - 38px)
   );
-  background-size: 69% 36px;
+  background-size: 69% 28px;
   pointer-events: none;
   z-index: 1;
 }
@@ -435,7 +405,7 @@ body {
   color: rgba(239, 246, 255, 0.82);
   background: rgb(81 88 119 / 18%);
   border-top: 1px solid rgba(239, 246, 255, 0.06);
-  border-radius: 0 0 18px 18px;
+  border-radius: 0;
   backdrop-filter: blur(10px);
   padding: 0.35rem 0 0.4rem;
   letter-spacing: 0.04em;
