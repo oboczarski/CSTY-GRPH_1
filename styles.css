@@ -355,13 +355,13 @@ body {
 .weekly-chart-y-axis {
   position: absolute;
   top: 0;
-  bottom: 1.35rem;
+  bottom: -9px;
   left: 0.35rem;
   width: 3.2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0.85rem 0 1.5rem;
+  padding: 0.85rem 0 2.15rem;
   gap: 0.25rem;
   z-index: 3;
 }
@@ -393,7 +393,7 @@ body {
 
 .weekly-chart-line-layer {
   position: absolute;
-  inset: 1rem 0.25rem 1.4rem 3.5rem;
+  inset: 1rem 0.25rem 2.15rem 3.5rem;
   z-index: 4;
 }
 
@@ -463,7 +463,7 @@ body {
   width: 12px;
   height: 12px;
   border-radius: 999px;
-  border: 2.5px solid rgba(2, 6, 23, 0.98);
+  border: 1px solid rgb(220 222 230 / 98%);
   display: grid;
   place-items: center;
   cursor: pointer;

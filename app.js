@@ -79,11 +79,11 @@ function yFromPoints(pts) {
 function bucketFor(pts) {
   // Elite performance: 22+ points → Purple
   if (pts >= 22) {
-    return { name: "Elite", color: "#cf78ff", glow: "0 0 30px rgba(207, 120, 255, 0.95)" };
+    return { name: "Elite", color: "#78ffedff", glow: "0 0 30px rgba(207, 120, 255, 0.95)" };
   }
   // Solid performance: 16-21.9 points → Cyan
   if (pts >= 16) {
-    return { name: "Solid", color: "#00bfff", glow: "0 0 26px rgba(0, 191, 255, 0.9)" };
+    return { name: "Solid", color: "#00afff", glow: "0 0 10px 6px rgba(0, 191, 255, 1)" };
   }
   // Under performance: 0-15.9 points → Red/Pink
   return { name: "Under", color: "#ff5f6d", glow: "0 0 18px rgba(255, 95, 109, 0.8)" };
