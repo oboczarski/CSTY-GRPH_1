@@ -148,7 +148,10 @@ body {
 
 .progress-ring {
   position: absolute;
-  inset: -13px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   transform: rotate(-90deg);
 }
 
@@ -529,10 +532,6 @@ body {
     padding: 8px;
   }
 
-  .progress-ring {
-    inset: -11px;
-  }
-
   .progress-value {
     font-size: 1.35rem;
   }
@@ -610,10 +609,6 @@ body {
     width: 105px;
     height: 105px;
     padding: 7px;
-  }
-
-  .progress-ring {
-    inset: -10px;
   }
 
   .progress-ring-track,
@@ -762,10 +757,6 @@ body {
     padding: 6px;
   }
 
-  .progress-ring {
-    inset: -9px;
-  }
-
   .progress-ring-track,
   .progress-ring-fill {
     stroke-width: 7;
@@ -910,10 +901,6 @@ body {
     width: 72px;
     height: 72px;
     padding: 5px;
-  }
-
-  .progress-ring {
-    inset: -7px;
   }
 
   .progress-ring-track,
